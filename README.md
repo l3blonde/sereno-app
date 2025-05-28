@@ -1,4 +1,5 @@
-# Sereno - In-Car Meditation & Wellness PWA https://sereno-app-three.vercel.app
+# Sereno - In-Car Meditation & Wellness PWA 
+https://sereno-app-three.vercel.app
 
 Progressive Web Application designed for automotive environments, providing meditation, breathing exercises, and wellness content optimised for CarPlay, Android Automotive OS, and in-vehicle displays.
 
