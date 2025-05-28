@@ -1,0 +1,27 @@
+/* =============================================================================
+   BUTTON VISIBILITY
+   Components: START SESSION button, split view buttons
+   Purpose: Ensures critical buttons are always visible and accessible
+============================================================================= */
+
+.split-view-button {
+    position: relative !important;
+    display: block !important;
+    z-index: 9999 !important;
+    margin-top: 16px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.preview-container {
+    overflow: visible !important;
+    position: relative !important;
+}
+
+.button-container {
+    position: relative !important;
+    z-index: 9999 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}

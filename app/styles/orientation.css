@@ -1,0 +1,84 @@
+/* Orientation styles */
+@media (orientation: portrait) {
+    .landscape-only {
+        display: none;
+    }
+
+    .portrait-warning {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background-color: #000000;
+        color: #ffffff;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (orientation: landscape) {
+    .landscape-only {
+        display: block;
+    }
+
+    .portrait-warning {
+        display: none;
+    }
+}
+
+/* System dock styles */
+.system-dock {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 88px;
+    background-color: #000000;
+    border-right: 1px solid #333333;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.dock-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 9999px;
+    background-opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.dock-icon-badge {
+    position: absolute;
+    top: -0.25rem;
+    right: -0.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 9999px;
+    background-color: #cf0000;
+    color: #ffffff;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-content {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+.main-content.with-dock {
+    left: 88px;
+}

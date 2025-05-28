@@ -1,0 +1,705 @@
+/* =============================================================================
+   COMPONENT STYLES - Complex Animations and Custom Elements Only
+   Components: SystemDock, SplitView, AudioFooter, SettingsPanel
+   Purpose: Only complex animations and custom shapes that Tailwind cannot handle
+============================================================================= */
+
+/* =============================================================================
+   SYSTEM DOCK ANIMATIONS - components/system-dock.tsx
+   Complex glow effects and animations for navigation icons
+============================================================================= */
+.icon-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 1rem;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+    animation: subtle-pulse 3s infinite alternate;
+}
+
+@keyframes subtle-pulse {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.red-glow {
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+}
+
+.star-shine {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, transparent 50%);
+    opacity: 0;
+    animation: pulse 2s infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+}
+
+.sereno-icon:hover .star-shine {
+    animation-duration: 1s;
+}
+
+/* =============================================================================
+   TEMPERATURE CONTROLS - components/system-dock.tsx & components/ui/status-bar.tsx
+   Custom CSS triangle shapes for temperature up/down arrows
+============================================================================= */
+.triangle-up {
+    width: 0;
+    height: 0;
+    border-left: 0.625rem solid transparent;
+    border-right: 0.625rem solid transparent;
+    border-bottom: 0.875rem solid white;
+    filter: drop-shadow(0 0 0.5rem rgba(255, 0, 0, 0.8)) drop-shadow(0 0 0.25rem rgba(255, 255, 255, 0.6));
+    transition: all 0.2s ease;
+}
+
+.triangle-down {
+    width: 0;
+    height: 0;
+    border-left: 0.625rem solid transparent;
+    border-right: 0.625rem solid transparent;
+    border-top: 0.875rem solid white;
+    filter: drop-shadow(0 0 0.5rem rgba(0, 100, 255, 0.8)) drop-shadow(0 0 0.25rem rgba(255, 255, 255, 0.6));
+    transition: all 0.2s ease;
+}
+
+@container (min-width: 300px) {
+    .triangle-up {
+        border-left: 0.75rem solid transparent;
+        border-right: 0.75rem solid transparent;
+        border-bottom: 1rem solid white;
+    }
+
+    .triangle-down {
+        border-left: 0.75rem solid transparent;
+        border-right: 0.75rem solid transparent;
+        border-top: 1rem solid white;
+    }
+}
+
+.triangle-up:hover {
+    filter: drop-shadow(0 0 0.75rem rgba(255, 0, 0, 1)) drop-shadow(0 0 0.375rem rgba(255, 255, 255, 0.8));
+}
+
+.triangle-down:hover {
+    filter: drop-shadow(0 0 0.75rem rgba(0, 100, 255, 1)) drop-shadow(0 0 0.375rem rgba(255, 255, 255, 0.8));
+}
+
+/* =============================================================================
+   NOTIFICATIONS - Used by various components for user feedback
+   Theme change notifications and other temporary messages
+============================================================================= */
+.mode-notification {
+    position: fixed;
+    top: 6.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 100;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -1.25rem);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    85% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -1.25rem);
+    }
+}
+
+.notification-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+}
+
+/* =============================================================================
+   RESPONSIVE LAYOUT
+   Portrait warning and landscape-only content
+============================================================================= */
+.portrait-warning {
+    display: none;
+}
+
+@media (orientation: portrait) {
+    .landscape-only {
+        display: none;
+    }
+
+    .portrait-warning {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #000000;
+        color: white;
+        text-align: center;
+        padding: 1.5rem;
+    }
+}
+
+/* =============================================================================
+   SPLIT VIEW LAYOUT - components/ui/split-view.tsx
+   Two-panel layout for exercise selection and preview
+============================================================================= */
+.split-view {
+    display: flex;
+    height: calc(100vh - 6.875rem);
+    width: 100%;
+}
+
+.split-view-left {
+    width: 50%;
+    height: 100%;
+    background-color: #000000;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.split-view-right {
+    width: 50%;
+    height: 100%;
+    background-color: #000000;
+    overflow: hidden;
+    position: relative;
+}
+
+.exercise-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.porsche-scrollbar::-webkit-scrollbar {
+    width: 0.25rem;
+}
+
+.porsche-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.porsche-scrollbar::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 0.125rem;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 0.3125rem rgba(0, 0, 0, 0.3);
+}
+
+.porsche-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.exercise-list-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.exercise-list-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: 0.5s;
+}
+
+.exercise-list-item:hover:before {
+    left: 100%;
+}
+
+.exercise-list-item:hover {
+    background: rgba(83, 84, 87, 0.3);
+}
+
+.exercise-list-item:active {
+    background: rgba(80, 80, 80, 0.5);
+    transform: translateY(0.0625rem);
+}
+
+.exercise-list-item.selected {
+    background: rgba(83, 84, 87, 0.5);
+    border-left: 0.25rem solid var(--accent-red);
+}
+
+.exercise-list-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    background: rgba(30, 30, 30, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.exercise-list-content {
+    flex: 1;
+}
+
+.exercise-list-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
+.exercise-list-description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.exercise-list-arrow {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 1rem;
+}
+
+.empty-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 12.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+}
+
+.start-session-button {
+    width: 80%;
+    height: 3.75rem;
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.start-session-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.375rem 1rem rgba(255, 255, 255, 0.2);
+}
+
+.start-session-button:active {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(0.0625rem);
+    box-shadow: 0 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
+}
+
+.start-session-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.125rem rgba(255, 255, 255, 0.5);
+}
+
+/* =============================================================================
+   EXERCISE PREVIEW - Used within components/ui/split-view.tsx
+   Preview area for selected breathing/meditation exercises
+============================================================================= */
+.exercise-preview {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem;
+}
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.exercise-preview-visual.full-size {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* =============================================================================
+   BREATHING EXERCISE CONTAINERS - components/features/breathing/*
+   Standardized containers for different breathing exercise visualizations
+============================================================================= */
+.souffle-de-vador-container,
+.quick-calm-container,
+.wave-horizon-container,
+.morning-energize-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.souffle-de-vador-visualization,
+.quick-calm-visualization,
+.wave-horizon-visualization,
+.morning-energize-visualization {
+    width: 18.75rem;
+    height: 18.75rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 47;
+}
+
+.breathing-circle {
+    width: 15.625rem;
+    height: 15.625rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-red) 0%, rgba(0, 0, 0, 0) 70%);
+    animation: breathe 8s infinite ease-in-out;
+    z-index: 48;
+}
+
+@keyframes breathe {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* =============================================================================
+   MEDITATION VIDEO COMPONENTS - components/features/meditation/*
+   Video player styling for meditation sessions
+============================================================================= */
+.meditation-video-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.video-container {
+    width: 100%;
+    height: 100%;
+    max-width: 40rem;
+    max-height: 22.5rem;
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    background-color: #000;
+}
+
+.meditation-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+.meditation-overlay {
+    display: none;
+}
+
+.video-overlay.playing {
+    opacity: 0;
+}
+
+.video-overlay:hover {
+    opacity: 1;
+}
+
+.video-title {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.play-button {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(0.625rem);
+    -webkit-backdrop-filter: blur(0.625rem);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 0 1.25rem rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.play-button:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 1.875rem rgba(255, 255, 255, 0.3);
+}
+
+.volume-control {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.volume-control:hover {
+    background: rgba(50, 50, 50, 0.8);
+    transform: scale(1.1);
+}
+
+/* =============================================================================
+   MEDITATION SESSION VIEW - components/features/meditation/meditation-session.tsx
+   Full-screen meditation session interface
+============================================================================= */
+.meditation-session-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.meditation-video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.meditation-session-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.session-info {
+    position: absolute;
+    top: 1.875rem;
+    left: 1.875rem;
+    color: white;
+    text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.session-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.session-controls {
+    position: absolute;
+    bottom: 1.875rem;
+    left: 1.875rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.control-button {
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 50%;
+    background: rgba(207, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-button:hover {
+    background: rgba(207, 0, 0, 1);
+    transform: scale(1.1);
+    box-shadow: 0 0 1.25rem rgba(207, 0, 0, 0.5);
+}
+
+.control-button.mute {
+    width: 3.125rem;
+    height: 3.125rem;
+    background: rgba(30, 30, 30, 0.8);
+}
+
+.control-button.mute:hover {
+    background: rgba(50, 50, 50, 0.8);
+    box-shadow: 0 0 0.9375rem rgba(255, 255, 255, 0.3);
+}
+
+/* =============================================================================
+   VIDEO LOADING AND ERROR STATES - components/features/meditation/*
+   Loading spinners and error messages for video components
+============================================================================= */
+.video-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.loading-spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0.1875rem solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #cf0000;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.625rem;
+}
+
+.loading-text {
+    color: white;
+    font-size: 1rem;
+}
+
+.video-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.error-message {
+    color: white;
+    font-size: 1rem;
+    background: rgba(207, 0, 0, 0.6);
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =============================================================================
+   SESSION INFO CONTAINER - Used in breathing/meditation sessions
+   Overlay information display during active sessions
+============================================================================= */
+.session-info-container {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    padding: 0.9375rem 1.25rem;
+    border-radius: 0.75rem;
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(0.625rem);
+    -webkit-backdrop-filter: blur(0.625rem);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 48;
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+    max-width: 50%;
+}
+
+.session-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.7);
+}

@@ -1,0 +1,172 @@
+/* Enhanced map styles for realistic driving experience with proper dark theme */
+.driving-map {
+    background-color: #1a1a1a;
+    overflow: hidden;
+}
+
+.leaflet-container {
+    background-color: #1a1a1a !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure map tiles load properly - FIXED for visibility */
+.leaflet-tile-container {
+    opacity: 1 !important;
+}
+
+.leaflet-tile {
+    opacity: 1 !important;
+    transition: opacity 0.2s ease-in-out !important;
+    /* Remove filters that were making map invisible */
+}
+
+/* High contrast route styling for sun readability */
+.upcoming-route path {
+    stroke: #ffffff !important;
+    stroke-width: 8px !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9)) !important;
+    opacity: 1 !important;
+}
+
+.route-glow path {
+    stroke: #ffffff !important;
+    stroke-width: 16px !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    opacity: 0.4 !important;
+    filter: blur(6px) !important;
+}
+
+/* Nearly invisible grey for passed route */
+.passed-route path {
+    stroke: #888888 !important;
+    stroke-width: 4px !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    opacity: 0.3 !important;
+}
+
+/* Enhanced destination marker */
+.destination-marker {
+    position: relative;
+    z-index: 1000;
+}
+
+.destination-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(207, 0, 0, 0.3) !important;
+    animation: destination-pulse 2s infinite;
+    pointer-events: none;
+}
+
+@keyframes destination-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* Ultra-smooth transitions for car */
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+    transition: transform 0.2s ease-out !important;
+}
+
+/* Enhanced map container */
+.leaflet-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.leaflet-control-container {
+    display: none;
+}
+
+/* Ensure the map container has proper background */
+.natural-navigation-map {
+    background-color: #1a1a1a !important;
+    border-radius: 0;
+}
+
+/* High contrast car with white glow */
+.user-location-car {
+    transition: transform 0.2s ease-out !important;
+    animation: carGlowPulseWhite 2s infinite;
+    will-change: transform;
+    z-index: 1000 !important;
+}
+
+/* Force map tiles to be visible */
+.leaflet-layer,
+.leaflet-tile-pane,
+.leaflet-tile {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure proper z-indexing for all elements */
+.leaflet-marker-pane {
+    z-index: 1000 !important; /* Ensure car is always on top */
+}
+
+.leaflet-overlay-pane {
+    z-index: 400 !important; /* Routes below car but above tiles */
+}
+
+.leaflet-tile-pane {
+    z-index: 100 !important; /* Base map at bottom */
+}
+
+/* Dark theme text */
+.leaflet-container a {
+    color: #ffffff;
+}
+
+.leaflet-container a.leaflet-disabled {
+    color: #666666;
+}
+
+/* Add CSS for red gradient glow effect */
+.red-glow-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 0, 0, 0.5) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 500;
+    opacity: 0.7;
+    mix-blend-mode: screen;
+}
+
+/* Add CSS for gradient route */
+.gradient-route path {
+    stroke: url(#routeGradient) !important;
+    stroke-width: 6px !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.7)) !important;
+    opacity: 0.9 !important;
+}
+
+@keyframes carGlowPulseWhite {
+    0% {
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 18px rgba(255, 255, 255, 1)) drop-shadow(0 0 36px rgba(255, 255, 255, 0.7));
+    }
+    100% {
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.5));
+    }
+}

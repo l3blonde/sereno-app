@@ -1,0 +1,120 @@
+@layer components {
+    /* Meditation specific styles */
+    .meditation-session {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+
+    .meditation-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 5;
+    }
+
+    .meditation-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 15;
+    }
+
+    .meditation-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        z-index: 20;
+        width: 80%;
+        max-width: 600px;
+    }
+
+    .meditation-title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .meditation-description {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .meditation-timer {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-family: monospace;
+    }
+
+    .meditation-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .meditation-button {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        border-radius: 9999px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .meditation-button:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .meditation-button.primary {
+        background-color: var(--porsche-red, #cf0000);
+    }
+
+    .meditation-button.primary:hover {
+        background-color: var(--porsche-red-hover, #a30000);
+    }
+
+    /* Meditation exercise container */
+    .meditation-exercise-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Meditation visualization */
+    .meditation-visualization {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    /* Meditation progress container */
+    .meditation-progress-container {
+        position: absolute;
+        bottom: 100px; /* Position above the audio footer */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+}

@@ -1,0 +1,297 @@
+:root {
+    --system-dock-width: 80px;
+    --system-dock-gap: 16px; /* Reduced from 24px to 16px */
+    --status-bar-width: 72px;
+    --status-bar-gap: 16px; /* Added right gap */
+    --mobile-dock-width: 60px;
+    --mobile-status-width: 50px;
+    --back-button-size: 44px;
+    --control-button-size: 40px;
+    --play-pause-button-size: 48px;
+    --audio-footer-width: 600px;
+    --audio-footer-max-width: 90%;
+    /* ... other variables remain the same */
+}
+
+/* Header elements padding to avoid status bar overlay */
+.header-menu,
+.settings-panel,
+.audio-footer-container,
+.breathing-timer-container,
+.meditation-progress-container {
+    padding-right: calc(var(--status-bar-gap, 16px) + 10px); /* Add extra padding to avoid overlay */
+}
+
+/* Main layout containers - FIXED */
+.breathing-exercise-container,
+.meditation-exercise-container {
+    position: fixed;
+    top: 0;
+    left: calc(var(--system-dock-width) + var(--system-dock-gap)); /* Now 80px + 16px = 96px */
+    right: calc(var(--status-bar-width) + var(--status-bar-gap)); /* 72px + 16px = 88px */
+    bottom: 0;
+    background-color: #000;
+    overflow: hidden;
+    z-index: 45;
+}
+
+/* Back button styling with frosted glass effect */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: calc(var(--system-dock-width) + var(--system-dock-gap) + 20px); /* Now 80px + 16px + 20px = 116px */
+    width: var(--back-button-size);
+    height: var(--back-button-size);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    z-index: 52;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Full-screen visualization containers - IMPROVED */
+.exercise-visualization,
+.meditation-visualization {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 46;
+}
+
+/* FIXED: Centered timer container - COMPLETELY REVISED */
+.breathing-timer-container,
+.meditation-progress-container {
+    position: absolute; /* Changed from fixed to absolute */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Perfect centering */
+    z-index: 49;
+}
+
+/* UPDATED: Audio footer container - centered at bottom */
+.audio-footer-container {
+    position: fixed;
+    bottom: 20px;
+    left: calc(var(--system-dock-width) + var(--system-dock-gap)); /* Now 80px + 16px = 96px */
+    right: calc(var(--status-bar-width) + var(--status-bar-gap)); /* 72px + 16px = 88px */
+    z-index: 52;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-left: calc(var(--system-dock-width) + var(--system-dock-gap)); /* Now 80px + 16px = 96px */
+}
+
+/* Audio footer styling - monochromatic */
+.audio-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    width: var(--audio-footer-width);
+    max-width: var(--audio-footer-max-width);
+    border-radius: 20px;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Audio controls */
+.audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Monochromatic audio control buttons */
+.audio-control-button {
+    width: var(--control-button-size);
+    height: var(--control-button-size);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.audio-control-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.audio-control-button.play-pause {
+    width: var(--play-pause-button-size);
+    height: var(--play-pause-button-size);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Volume slider */
+.volume-slider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 200px;
+}
+
+.volume-slider input[type="range"] {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    outline: none;
+}
+
+.volume-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Audio toggles */
+.audio-toggles {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.audio-toggle-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.audio-toggle-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.audio-toggle-button.active {
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+}
+
+/* Meditation video container - full screen */
+.meditation-video-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.meditation-session-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Exercise list styling - enhanced visibility */
+.exercise-list-header {
+    background-color: rgba(83, 84, 87, 0.7);
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.exercise-list-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.exercise-list-item:hover {
+    background-color: rgba(83, 84, 87, 0.4);
+}
+
+.exercise-list-item.selected {
+    background-color: rgba(83, 84, 87, 0.7);
+    border-left: 8px solid #cf0000;
+    padding-left: 8px;
+}
+
+.exercise-icon-container {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: rgba(107, 109, 112, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    flex-shrink: 0;
+}
+
+.exercise-content {
+    flex: 1;
+}
+
+.exercise-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.exercise-description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Main content positioning with minimal gaps */
+.carplay-main-content {
+    margin-left: calc(var(--system-dock-width) + var(--system-dock-gap)); /* 80px + 16px = 96px */
+    margin-right: calc(var(--status-bar-width) + var(--status-bar-gap)); /* 72px + 16px = 88px */
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}

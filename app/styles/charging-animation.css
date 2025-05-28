@@ -1,0 +1,49 @@
+/* Battery charging animation styles */
+.battery-glow {
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+    }
+    100% {
+        filter: drop-shadow(0 0 25px rgba(59, 130, 246, 0.7));
+    }
+}
+
+.charging-progress {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    width: 120px;
+    margin: 8px auto 0;
+}
+
+.charging-progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #3b82f6, #93c5fd);
+    transition: width 1s ease-in-out;
+}
+
+/* Button hover effects */
+.start-button {
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    background: linear-gradient(92deg, #cf0000 0.31%, rgba(42, 0, 0, 0.82) 99.8%);
+    box-shadow: 0 0 30px rgba(207, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.dismiss-button {
+    transition: all 0.3s ease;
+}
+
+.dismiss-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}

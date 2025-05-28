@@ -1,0 +1,285 @@
+/* =============================================================================
+   GLOBAL STYLES - Base Application Styling
+   Components: All components, global layout, typography system
+   Purpose: Foundation styles, imports, and global utilities
+============================================================================= */
+
+@import 'tailwindcss';
+
+/* CSS File Imports */
+@import url("./styles/button-fix.css");
+@import url("./styles/moving-page.css");
+@import url("./styles/map-styles.css");
+@import url("./styles/themes.css");
+@import url("./styles/components.css");
+@import url("./styles/colors.css");
+@import url("./styles/custom-controls.css");
+@import url("./styles/system-dock.css");
+@import url("./styles/status-bar.css");
+@import url("./styles/charging-animation.css");
+@import url("./styles/tailwind-custom.css");
+@import url("./styles/mobile-improvements.css");
+
+/* Google Fonts Import */
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&display=swap");
+
+/* =============================================================================
+   ROOT VARIABLES - Global CSS Custom Properties
+============================================================================= */
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+  --system-dock-width: 80px;
+  --status-bar-width: 72px;
+}
+
+/* =============================================================================
+   BASE HTML AND BODY STYLES - Foundation Elements
+============================================================================= */
+html,
+body {
+  transition: background 0.3s ease;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  font-family: "Barlow Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+   BOX MODEL RESET - Consistent Sizing
+============================================================================= */
+* {
+  box-sizing: border-box;
+}
+
+/* =============================================================================
+   PORSCHE DESIGN SYSTEM TYPOGRAPHY - Utility Classes
+============================================================================= */
+@layer utilities {
+  .section-heading {
+    @apply text-center;
+  }
+
+  .headline-grid {
+    @apply text-left;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .fluid-display {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .fluid-headline {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .fluid-text {
+    font-size: clamp(0.875rem, 1.25vw, 1rem);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .carplay-glanceable {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  .carplay-readable {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* =============================================================================
+   PAGE TRANSITION SYSTEM - Smooth Navigation
+============================================================================= */
+.page-transition {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* =============================================================================
+   CARPLAY LAYOUT SYSTEM - Main Application Layout
+============================================================================= */
+.carplay-layout {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: white;
+  font-family: "Barlow Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  padding-top: var(--safe-area-top);
+  padding-bottom: var(--safe-area-bottom);
+  padding-left: var(--safe-area-left);
+  padding-right: var(--safe-area-right);
+}
+
+.carplay-main-content {
+  margin-left: 80px;
+  margin-right: 72px;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 50;
+}
+
+/* =============================================================================
+   MOBILE LANDSCAPE ADJUSTMENTS - Responsive Layout
+============================================================================= */
+@media (max-width: 768px) and (orientation: landscape) {
+  .carplay-main-content {
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+}
+
+@media (max-width: 480px) and (orientation: landscape) {
+  .carplay-main-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+/* =============================================================================
+   Z-INDEX LAYERING - Component Stacking Order
+============================================================================= */
+.carplay-left-sidebar {
+  z-index: 100;
+}
+
+.carplay-right-sidebar {
+  z-index: 100;
+}
+
+/* =============================================================================
+   ACCESSIBILITY ENHANCEMENTS - Visual Improvements
+============================================================================= */
+.high-contrast {
+  filter: contrast(1.2) brightness(1.1);
+}
+
+/* =============================================================================
+   TOUCH TARGET STANDARDS - Minimum Interactive Sizes
+============================================================================= */
+button,
+.clickable {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* =============================================================================
+   PORTRAIT MODE WARNING - Force Landscape Orientation
+============================================================================= */
+.portrait-warning {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  .portrait-warning {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 9999;
+  }
+
+  .landscape-forced {
+    display: none;
+  }
+}
+
+/* =============================================================================
+   CUSTOM ANIMATIONS - Utility Animations
+============================================================================= */
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =============================================================================
+   SMALL SCREEN OPTIMIZATIONS - Compact Display Adjustments
+============================================================================= */
+@media (max-height: 600px) {
+  .system-dock {
+    transform: scale(0.8);
+    transform-origin: left center;
+  }
+
+  .header-menu {
+    height: 60px;
+  }
+
+  .split-view {
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+  }
+}
+
+/* =============================================================================
+   TEXT SHADOW UTILITIES - Enhanced Readability
+============================================================================= */
+.text-shadow-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+.text-shadow-subtle {
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+.text-shadow-medium {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.text-shadow-strong {
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+}

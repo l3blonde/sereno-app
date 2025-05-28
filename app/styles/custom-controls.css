@@ -1,0 +1,95 @@
+/* Custom range input styling */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Active state for buttons */
+.audio-control-button:active,
+.audio-toggle-button:active {
+    transform: scale(0.95);
+}
+
+/* Transition for all interactive elements */
+button,
+input[type="range"] {
+    transition: all 0.2s ease;
+}
+
+/* Add custom button styles */
+.gradient-button-hover {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.gradient-button-hover:hover {
+    background: linear-gradient(92deg, #cf0000 0.31%, rgba(42, 0, 0, 0.82) 99.8%);
+    box-shadow:
+            -92.407px 123.21px 42.856px 0px rgba(138, 0, 0, 0.0),
+            -58.926px 79.015px 38.838px 0px rgba(138, 0, 0, 0.03),
+            -33.481px 44.195px 33.481px 0px rgba(138, 0, 0, 0.11),
+            -14.732px 20.089px 24.106px 0px rgba(138, 0, 0, 0.18),
+            -4.018px 5.357px 13.392px 0px rgba(138, 0, 0, 0.21),
+            0 0 30px rgba(207, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.gradient-button-hover:active {
+    transform: translateY(0);
+    box-shadow: 0 0 15px rgba(207, 0, 0, 0.3);
+}
+
+.gradient-button-hover:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(207, 0, 0, 0.5), 0 0 20px rgba(207, 0, 0, 0.3);
+}
+
+.gradient-button-hover:disabled {
+    background: rgba(83, 84, 87, 0.5);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Exercise list item styling */
+.exercise-item-selected {
+    transform: translateX(2px);
+    transition: all 0.3s ease;
+}
+
+.exercise-item-selected::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background: linear-gradient(to bottom, #cf0000, rgba(42, 0, 0, 0.82));
+    box-shadow: 0 0 15px rgba(207, 0, 0, 0.5);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}

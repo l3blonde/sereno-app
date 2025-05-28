@@ -1,0 +1,72 @@
+/*
+  CORE.CSS
+  Contains all fundamental variables, base styles, and utility classes
+  Combined from base.css and theme-colors.css
+*/
+
+/* Base element styles */
+body {
+    background-color: var(--sereno-black);
+    color: var(--sereno-white);
+    font-family: "Barlow Condensed", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+/* Accessibility improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--theme-primary);
+    outline-offset: 2px;
+}
+
+/* Common layout styles */
+.page-container {
+    min-height: 100vh;
+    background: var(--sereno-black);
+    color: var(--sereno-white);
+    padding: var(--space-6);
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-8);
+    padding: var(--space-4) 0;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: var(--space-4);
+    color: var(--sereno-light-grey);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}

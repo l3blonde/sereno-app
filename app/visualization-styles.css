@@ -1,0 +1,32 @@
+/* Light theme styles for visualizations */
+.light-theme .calm-particles canvas,
+.light-theme .sunrise-particles canvas {
+    filter: brightness(0.7) contrast(1.5) !important;
+    background-color: #e0e0e0 !important;
+}
+
+.light-theme .wave-horizon canvas {
+    filter: brightness(0.9) contrast(1.2) !important;
+}
+
+/* Add a border to make the visualization container more visible */
+.light-theme .visualization-container {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure particles are visible in light mode */
+.light-theme .calm-particles-container,
+.light-theme .sunrise-particles-container {
+    background-color: #e0e0e0 !important;
+}
+
+/* Add these classes to the visualization containers */
+.calm-particles-container,
+.sunrise-particles-container,
+.wave-horizon-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}

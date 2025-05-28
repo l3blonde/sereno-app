@@ -1,0 +1,357 @@
+/* AAOS (Android Automotive OS) Compliance & Mobile Landscape Optimization */
+
+/* Safe Area Insets Support for Modern iPhones */
+:root {
+    /* Safe area insets for notch and Dynamic Island */
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+
+    /* AAOS Standard Breakpoints (dp = density-independent pixels) */
+    --aaos-compact-min: 480px; /* 480-600dp */
+    --aaos-compact-max: 600px;
+    --aaos-medium-min: 600px; /* 600-840dp */
+    --aaos-medium-max: 840px;
+    --aaos-expanded-min: 840px; /* 840dp+ */
+
+    /* Mobile landscape optimizations */
+    --mobile-dock-width: 60px;
+    --mobile-status-width: 50px;
+    --mobile-content-padding: 16px;
+    --mobile-dock-gap: 16px; /* Add this new variable */
+    --mobile-status-gap: 16px; /* Add this new variable */
+}
+
+/* AAOS Compact Displays (480-600dp) - Small automotive screens */
+@media (min-width: 480px) and (max-width: 600px) {
+    .aaos-compact {
+        --system-dock-width: 50px;
+        --system-dock-gap: 16px; /* Keep consistent 16px gap */
+        --status-bar-width: 45px;
+        --timer-size: 100px;
+        --exercise-list-width: 55%;
+    }
+
+    .carplay-main-content {
+        margin-left: calc(50px + 16px); /* 66px total */
+        margin-right: 45px;
+    }
+
+    .header-menu {
+        height: 50px;
+        font-size: 14px;
+    }
+
+    .split-view {
+        gap: 12px;
+    }
+
+    /* Compact touch targets */
+    button,
+    .clickable {
+        min-width: 40px;
+        min-height: 40px;
+        font-size: 14px;
+    }
+}
+
+/* AAOS Medium Displays (600-840dp) - Standard automotive screens */
+@media (min-width: 600px) and (max-width: 840px) {
+    .aaos-medium {
+        --system-dock-width: 70px;
+        --system-dock-gap: 16px; /* Keep consistent 16px gap */
+        --status-bar-width: 60px;
+        --timer-size: 140px;
+        --exercise-list-width: 60%;
+    }
+
+    .carplay-main-content {
+        margin-left: calc(70px + 16px); /* 86px total */
+        margin-right: 60px;
+    }
+
+    .header-menu {
+        height: 60px;
+        font-size: 16px;
+    }
+
+    .split-view {
+        gap: 16px;
+    }
+}
+
+/* AAOS Expanded Displays (840dp+) - Large automotive screens */
+@media (min-width: 840px) {
+    .aaos-expanded {
+        --system-dock-width: 80px;
+        --status-bar-width: 72px;
+        --timer-size: 180px;
+        --exercise-list-width: 65%;
+    }
+
+    .carplay-main-content {
+        margin-left: 80px;
+        margin-right: 72px;
+    }
+}
+
+/* Ultra-Wide Displays (21:9, 32:9) - Premium automotive displays */
+@media (min-aspect-ratio: 21 / 9) {
+    .ultra-wide-layout {
+        --exercise-list-width: 45%;
+        --preview-area-width: 55%;
+    }
+
+    .split-view {
+        gap: 32px;
+    }
+
+    .carplay-main-content {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+}
+
+@media (min-aspect-ratio: 32 / 9) {
+    .ultra-wide-layout {
+        --exercise-list-width: 35%;
+        --preview-area-width: 65%;
+    }
+
+    .split-view {
+        gap: 48px;
+    }
+}
+
+/* Mobile Device Landscape Optimization */
+.mobile-device.landscape-forced {
+    /* Force landscape layout similar to desktop */
+    .carplay-main-content {
+        margin-left: calc(var(--mobile-dock-width) + var(--mobile-dock-gap)); /* Now 60px + 16px = 76px */
+        margin-right: var(--mobile-status-width);
+        padding: var(--mobile-content-padding);
+    }
+
+    /* Optimize system dock for mobile landscape */
+    .system-dock {
+        width: var(--mobile-dock-width);
+        padding: 8px 4px;
+    }
+
+    .system-dock .dock-item {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 8px;
+    }
+
+    /* Optimize header for mobile landscape */
+    .header-menu {
+        height: 50px;
+        padding: 0 16px;
+    }
+
+    .header-menu button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    /* Optimize split view for mobile landscape */
+    .split-view {
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .exercise-list {
+        min-width: 280px;
+    }
+
+    .exercise-preview {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    /* Touch-optimized controls */
+    .audio-footer {
+        padding: 12px 16px;
+        gap: 12px;
+    }
+
+    .audio-footer button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+    .carplay-main-content {
+        margin-left: calc(var(--mobile-dock-width) + var(--mobile-dock-gap)); /* 60px + 16px = 76px */
+        margin-right: calc(var(--mobile-status-width) + var(--mobile-status-gap)); /* 50px + 16px = 66px */
+    }
+
+    .breathing-exercise-container,
+    .meditation-exercise-container {
+        left: calc(var(--mobile-dock-width) + var(--mobile-dock-gap)); /* 60px + 16px = 76px */
+        right: calc(var(--mobile-status-width) + var(--mobile-status-gap)); /* 50px + 16px = 66px */
+    }
+
+    .back-button {
+        left: calc(var(--mobile-dock-width) + var(--mobile-dock-gap) + 20px); /* 60px + 16px + 20px = 96px */
+    }
+
+    .audio-footer-container {
+        left: calc(var(--mobile-dock-width) + var(--mobile-dock-gap)); /* 60px + 16px = 76px */
+        right: calc(var(--mobile-status-width) + var(--mobile-status-gap)); /* 50px + 16px = 66px */
+    }
+
+    /* Mobile-specific header adjustments */
+    .header-menu {
+        padding-left: 16px;
+        padding-right: calc(var(--mobile-status-gap, 16px) + 10px);
+    }
+
+    /* Mobile exercise list adjustments */
+    .exercise-list-item {
+        padding: 12px 16px;
+    }
+
+    .exercise-icon-container {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+    }
+
+    .exercise-title {
+        font-size: 16px;
+    }
+
+    .exercise-description {
+        font-size: 13px;
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .carplay-main-content {
+        margin-left: calc(var(--system-dock-width) + var(--system-dock-gap)); /* 80px + 16px = 96px */
+        margin-right: calc(var(--status-bar-width) + var(--status-bar-gap)); /* 72px + 16px = 88px */
+    }
+}
+
+/* iPhone Safe Area Support */
+.has-notch,
+.has-dynamic-island {
+    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
+}
+
+/* Dynamic Island specific adjustments */
+.has-dynamic-island .header-menu {
+    margin-top: var(--safe-area-top);
+}
+
+.has-dynamic-island .system-dock {
+    margin-top: var(--safe-area-top);
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .breathing-visual,
+    .meditation-timer,
+    .animated-clock {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .page-transition {
+        transition: none !important;
+    }
+}
+
+/* Accessibility: High Contrast */
+@media (prefers-contrast: more) {
+    .carplay-layout {
+        filter: contrast(1.5) brightness(1.2);
+    }
+
+    button,
+    .clickable {
+        border: 2px solid currentColor;
+    }
+
+    .text-shadow-glow {
+        text-shadow: 0 0 2px currentColor;
+    }
+}
+
+/* Mobile Landscape Home Page Optimization */
+.mobile-device.landscape-forced .home-page {
+    /* Ensure home page elements scale properly */
+    .weather-widget,
+    .animated-clock {
+        transform: scale(0.8);
+        transform-origin: center;
+    }
+
+    /* Optimize spacing for mobile landscape */
+    .home-content {
+        gap: 24px;
+        padding: 16px;
+    }
+}
+
+/* Mobile Landscape Exercise Views */
+.mobile-device.landscape-forced .exercise-view {
+    /* Optimize breathing/meditation views for mobile landscape */
+    .back-button {
+        top: 12px;
+        left: 12px;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .breathing-visual {
+        transform: scale(0.85);
+    }
+
+    .meditation-timer {
+        transform: scale(0.8);
+        top: 12px;
+        right: 12px;
+    }
+}
+
+/* Ensure proper touch targets on all mobile devices */
+.mobile-device button,
+.mobile-device .clickable,
+.mobile-device .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 12px;
+}
+
+/* Mobile landscape status indicators */
+.mobile-device.landscape-forced .status-indicators {
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+/* Optimize text sizes for mobile landscape */
+.mobile-device.landscape-forced {
+    .fluid-display {
+        font-size: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .fluid-headline {
+        font-size: clamp(1rem, 2vw, 1.5rem);
+    }
+
+    .fluid-text {
+        font-size: clamp(0.75rem, 1vw, 0.875rem);
+    }
+
+    .carplay-glanceable {
+        font-size: clamp(1rem, 1.5vw, 1.25rem);
+    }
+}

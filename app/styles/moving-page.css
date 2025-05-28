@@ -1,0 +1,275 @@
+/* Moving page layout with FIXED audio player positioning */
+.moving-page-container {
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Status bar */
+.status-bar {
+    height: 32px;
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    z-index: 1001;
+}
+
+.status-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-value {
+    font-weight: 500;
+}
+
+/* Connectivity indicators */
+.connectivity-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.signal-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.signal-bars {
+    display: flex;
+    align-items: end;
+    gap: 1px;
+    height: 12px;
+}
+
+.signal-bar {
+    width: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 1px;
+}
+
+.signal-bar.active {
+    background: white;
+}
+
+.network-type {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+/* Fixed position navigation elements - IMPROVED SYMMETRY */
+.fixed-nav-instruction {
+    position: fixed;
+    top: 80px;
+    left: 100px;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    min-width: 280px;
+}
+
+.fixed-nav-instruction .text-red-400 {
+    color: #ffffff !important;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.fixed-nav-instruction .text-white {
+    color: #ffffff !important;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.fixed-nav-instruction .bg-red-500\/20 {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.fixed-nav-instruction .text-red-400 {
+    color: #ffffff !important;
+}
+
+/* High contrast street name overlay - IMPROVED POSITION */
+.fixed-street-name {
+    position: fixed;
+    bottom: 100px;
+    left: 100px;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    z-index: 1000;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    min-width: 160px;
+}
+
+/* High contrast ETA overlay - MATCHED WITH LEFT INSTRUCTION */
+.fixed-eta {
+    position: fixed;
+    top: 80px;
+    right: 100px;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    min-width: 280px;
+}
+
+/* FIXED audio player positioning - MATCHED WITH STREET NAME */
+.fixed-audio-player {
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+/* Compact audio player styles - enhanced for glanceability */
+.compact-audio-player {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(16px);
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    min-width: 280px;
+    max-width: 320px;
+}
+
+.audio-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.album-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-status {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.track-title {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.play-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.play-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+}
+
+.play-button:active {
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .fixed-audio-player {
+        right: 80px;
+    }
+
+    .fixed-eta {
+        right: 80px;
+    }
+
+    .fixed-nav-instruction {
+        left: 80px;
+    }
+
+    .fixed-street-name {
+        left: 80px;
+    }
+
+    .compact-audio-player {
+        min-width: 240px;
+        max-width: 280px;
+    }
+}
+
+@media (max-height: 600px) {
+    .fixed-nav-instruction {
+        top: 40px;
+        padding: 8px 12px;
+    }
+
+    .fixed-eta {
+        top: 40px;
+        padding: 8px 12px;
+    }
+
+    .fixed-street-name {
+        bottom: 80px;
+    }
+
+    .fixed-audio-player {
+        bottom: 80px;
+    }
+}

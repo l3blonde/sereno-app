@@ -1,0 +1,184 @@
+/* Porsche Responsive Design System
+ * Breakpoints:
+ * Base: 0px
+ * XS: 480px
+ * S: 760px
+ * M: 1000px
+ * L: 1300px
+ * XL: 1760px
+ * XXL: 1920px
+ */
+
+/* Base styles (0px+) - Mobile first approach */
+:root {
+    --system-dock-width: 60px;
+    --system-dock-gap: 24px; /* Increased gap to 24px */
+    --exercise-list-width: 60%; /* Changed to percentage-based width */
+    --audio-footer-width: 90%;
+    --audio-footer-max-width: 600px;
+    --timer-size: 120px;
+    --control-button-size: 40px;
+    --play-pause-button-size: 50px;
+    --back-button-size: 50px;
+}
+
+/* XS breakpoint (480px+) */
+@media (min-width: 480px) {
+    :root {
+        --system-dock-width: 70px;
+        --system-dock-gap: 24px; /* Maintain 24px gap */
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 90%;
+        --audio-footer-max-width: 650px;
+        --timer-size: 140px;
+        --control-button-size: 45px;
+        --play-pause-button-size: 55px;
+        --back-button-size: 55px;
+    }
+
+    .audio-footer {
+        padding: 14px 22px;
+    }
+}
+
+/* S breakpoint (760px+) */
+@media (min-width: 760px) {
+    :root {
+        --system-dock-width: 80px;
+        --system-dock-gap: 24px; /* Maintain 24px gap */
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 85%;
+        --audio-footer-max-width: 700px;
+        --timer-size: 160px;
+        --control-button-size: 50px;
+        --play-pause-button-size: 60px;
+        --back-button-size: 60px;
+    }
+}
+
+/* M breakpoint (1000px+) */
+@media (min-width: 1000px) {
+    :root {
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 80%;
+        --audio-footer-max-width: 750px;
+        --timer-size: 180px;
+    }
+
+    .audio-footer {
+        padding: 16px 24px;
+    }
+}
+
+/* L breakpoint (1300px+) */
+@media (min-width: 1300px) {
+    :root {
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 75%;
+        --audio-footer-max-width: 800px;
+        --timer-size: 200px;
+    }
+
+    .breathing-timer-container,
+    .meditation-progress-container {
+        padding: 12px;
+    }
+}
+
+/* XL breakpoint (1760px+) */
+@media (min-width: 1760px) {
+    :root {
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 70%;
+        --audio-footer-max-width: 900px;
+        --timer-size: 220px;
+    }
+}
+
+/* XXL breakpoint (1920px+) */
+@media (min-width: 1920px) {
+    :root {
+        --exercise-list-width: 60%; /* Maintain percentage-based width */
+        --audio-footer-width: 65%;
+        --audio-footer-max-width: 1000px;
+        --timer-size: 240px;
+    }
+}
+
+/* Media Query Min: L */
+@media (min-width: 1300px) {
+    .large-screen-only {
+        display: block;
+    }
+}
+
+/* Media Query Max: XL */
+@media (max-width: 1760px) {
+    .extra-large-screen-only {
+        display: none;
+    }
+}
+
+/* Media Query Min Max: M-L */
+@media (min-width: 1000px) and (max-width: 1300px) {
+    .medium-to-large-screen-only {
+        display: block;
+    }
+}
+
+/* Adjust volume slider width based on screen size */
+@media (max-width: 760px) {
+    .volume-slider {
+        width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .volume-slider {
+        width: 100px;
+    }
+
+    /* Stack audio footer on very small screens */
+    .audio-footer {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .audio-controls {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .audio-toggles {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Apply CSS variables to elements */
+.audio-footer {
+    width: var(--audio-footer-width);
+    max-width: var(--audio-footer-max-width);
+}
+
+.audio-control-button {
+    width: var(--control-button-size);
+    height: var(--control-button-size);
+}
+
+.audio-control-button.play-pause {
+    width: var(--play-pause-button-size);
+    height: var(--play-pause-button-size);
+}
+
+.back-button {
+    width: var(--back-button-size);
+    height: var(--back-button-size);
+}
+
+.breathing-timer-container,
+.meditation-progress-container {
+    width: var(--timer-size);
+    height: var(--timer-size);
+}

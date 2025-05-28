@@ -1,0 +1,248 @@
+/* Glowing route line */
+.glowing-route {
+    filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.8));
+}
+
+.route-overlay {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.active-segment {
+    filter: drop-shadow(0 0 12px rgba(255, 94, 58, 1));
+    animation: pulse-route 1.5s infinite;
+}
+
+@keyframes pulse-route {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+/* Destination marker */
+.destination-marker-container {
+    background: transparent;
+}
+
+.destination-marker {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.destination-pin {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: #ff3b30;
+    border: 2px solid white;
+    border-radius: 50% 50% 50% 0;
+    transform-origin: bottom left;
+    transform: translateX(-50%) rotate(-45deg);
+    box-shadow: 0 0 15px rgba(255, 59, 48, 0.8);
+}
+
+.destination-pulse {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 59, 48, 0.3);
+    border-radius: 50%;
+    top: -5px;
+    left: 0;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Tooltip styling */
+.destination-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 59, 48, 0.5);
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Glowing route line */
+.glowing-route {
+    filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.8));
+}
+
+.route-overlay {
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+}
+
+.active-segment {
+    filter: drop-shadow(0 0 12px rgba(255, 94, 58, 1));
+    animation: pulse-route 1.5s infinite;
+}
+
+@keyframes pulse-route {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+/* Car marker */
+.car-marker {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+    transition: all 0.5s ease;
+    z-index: 1000 !important;
+}
+
+/* Destination marker */
+.destination-marker-container {
+    background: transparent;
+}
+
+.destination-marker {
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.destination-pin {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: #ff3b30;
+    border: 2px solid white;
+    border-radius: 50% 50% 50% 0;
+    transform-origin: bottom left;
+    transform: translateX(-50%) rotate(-45deg);
+    box-shadow: 0 0 15px rgba(255, 59, 48, 0.8);
+}
+
+.destination-pulse {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 59, 48, 0.3);
+    border-radius: 50%;
+    top: -5px;
+    left: 0;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Tooltip styling */
+.destination-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 59, 48, 0.5);
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Navigation instruction control */
+.nav-instruction {
+    margin: 10px;
+    z-index: 1000;
+}
+
+.nav-instruction-inner {
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.nav-icon {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.nav-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-distance {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.nav-instruction-text {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Street name control */
+.street-name {
+    margin: 10px;
+    z-index: 1000;
+}
+
+.street-name-inner {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}

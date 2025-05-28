@@ -1,0 +1,154 @@
+@layer components {
+    /* Breathing exercise specific styles */
+    .breathing-exercise-container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .meditation-exercise-container,
+    .focus-exercise-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 50;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .exercise-visualization,
+    .meditation-visualization,
+    .focus-visualization {
+        position: relative;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .breathing-timer-container,
+    .meditation-progress-container,
+    .focus-timer-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .audio-footer-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+    }
+
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 100px; /* Adjusted for system dock */
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        transition: background-color 0.2s;
+    }
+
+    .back-button:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .exercise-title-bar {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 10;
+    }
+
+    .exercise-title-bar h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .breathing-circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        transition: transform 4s ease-in-out;
+    }
+
+    .breathing-instruction {
+        position: absolute;
+        bottom: 6rem;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 300;
+        letter-spacing: 0.1em;
+        color: var(--sereno-white, #fff);
+        opacity: 0.8;
+        z-index: 50;
+    }
+
+    .breathing-timer {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        font-size: 1.25rem;
+        color: var(--sereno-light-grey, #aaa);
+        z-index: 50;
+    }
+
+    /* Phase indicators */
+    .phase-indicator {
+        position: absolute;
+        bottom: 10rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+        z-index: 50;
+    }
+
+    .phase-dot {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.3);
+        transition: background-color 0.3s ease;
+    }
+
+    .phase-dot.active {
+        background-color: var(--porsche-red, #cf0000);
+        box-shadow: 0 0 10px var(--porsche-red, #cf0000);
+    }
+}

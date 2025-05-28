@@ -1,0 +1,220 @@
+.status-bar-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 72px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 1000;
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+    min-height: 44px;
+    justify-content: center;
+}
+
+.battery-item {
+    margin-top: auto;
+    margin-bottom: 20px;
+}
+
+/* Signal Bars */
+.signal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.signal-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+}
+
+.signal-bar {
+    width: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+}
+
+.signal-bar:nth-child(1) {
+    height: 4px;
+}
+.signal-bar:nth-child(2) {
+    height: 8px;
+}
+.signal-bar:nth-child(3) {
+    height: 12px;
+}
+.signal-bar:nth-child(4) {
+    height: 16px;
+}
+
+.signal-bar.active {
+    background: white;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.network-type {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Temperature Controls */
+.temp-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.temp-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.temp-arrow:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.temp-arrow:active {
+    transform: scale(0.95);
+}
+
+/* White triangles with colored glows */
+.triangle-up {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 14px solid white;
+    filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.8)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+    transition: all 0.2s ease;
+}
+
+.triangle-down {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 14px solid white;
+    filter: drop-shadow(0 0 8px rgba(0, 100, 255, 0.8)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+    transition: all 0.2s ease;
+}
+
+/* Enhanced glow on hover */
+.temp-arrow:hover .triangle-up {
+    filter: drop-shadow(0 0 12px rgba(255, 0, 0, 1)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+}
+
+.temp-arrow:hover .triangle-down {
+    filter: drop-shadow(0 0 12px rgba(0, 100, 255, 1)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+}
+
+/* Pulse animation on click */
+.temp-arrow:active .triangle-up {
+    filter: drop-shadow(0 0 16px rgba(255, 0, 0, 1)) drop-shadow(0 0 8px rgba(255, 255, 255, 1));
+}
+
+.temp-arrow:active .triangle-down {
+    filter: drop-shadow(0 0 16px rgba(0, 100, 255, 1)) drop-shadow(0 0 8px rgba(255, 255, 255, 1));
+}
+
+.temperature-display {
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.temp-value {
+    display: block;
+}
+
+/* iPhone-style Horizontal Battery */
+.battery-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.battery-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.battery-body {
+    width: 32px;
+    height: 16px;
+    border: 2px solid white;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.battery-level {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: white;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
+
+.battery-tip {
+    width: 2px;
+    height: 8px;
+    background: white;
+    border-radius: 0 1px 1px 0;
+    margin-left: 1px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .status-bar-right {
+        width: 60px;
+        padding: 16px 0;
+    }
+
+    .status-item {
+        margin-bottom: 20px;
+    }
+
+    .battery-body {
+        width: 28px;
+        height: 14px;
+    }
+}

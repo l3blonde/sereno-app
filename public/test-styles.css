@@ -1,0 +1,13 @@
+/* Test CSS file to verify loading */
+body {
+    background-color: purple !important;
+    color: yellow !important;
+}
+
+h1 {
+    border: 5px solid red !important;
+}
+
+button {
+    background-color: orange !important;
+}

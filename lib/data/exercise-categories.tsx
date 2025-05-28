@@ -1,0 +1,101 @@
+import { Wind, Brain, Sunrise, TreesIcon as Lungs, Leaf, Mountain, Waves, Zap } from "lucide-react"
+
+// Exercise categories and data
+export const exerciseCategories = {
+    breathing: [
+        {
+            id: "quick-calm",
+            title: "Quick Calm",
+            description: "A simple breathing exercise to quickly calm your mind and reduce stress.",
+            category: "breathing",
+            tags: ["relax"],
+            icon: <Wind size={24} />,
+            audioSrc: "/audio/forest-background.mp3",
+        },
+        {
+            id: "deep-focus",
+            title: "Deep Focus",
+            description: "A breathing pattern designed to enhance concentration and focus.",
+            category: "breathing",
+            tags: ["focus"],
+            icon: <Brain size={24} />,
+            audioSrc: "/audio/deep-focus.mp3",
+        },
+        {
+            id: "morning-energize",
+            title: "Morning Energize",
+            description: "Start your day with an energizing breathing exercise.",
+            category: "breathing",
+            tags: ["vitalize"],
+            icon: <Sunrise size={24} />,
+            audioSrc: "/audio/morning-energize.mp3",
+        },
+        {
+            id: "souffle-de-vador",
+            title: "Souffle de Vador",
+            description: "A deep breathing technique with immersive visualization.",
+            category: "breathing",
+            tags: ["focus"],
+            icon: <Lungs size={24} />,
+            audioSrc: "/audio/imperialMarch.mp3",
+        },
+    ],
+    meditation: [
+        {
+            id: "forest-escape",
+            title: "Forest Escape",
+            description: "Find peace in a virtual forest environment.",
+            category: "meditation",
+            tags: ["relax"],
+            backgroundSrc: "/videos/forest-background.mp4",
+            audioSrc: "/audio/forest-background.mp3",
+            duration: 300,
+            guidanceFiles: ["/audio/forest-intro.mp3", "/audio/forest-middle.mp3", "/audio/forest-end.mp3"],
+            guidanceTiming: [10, 150, 270],
+            icon: <Leaf size={24} />,
+        },
+        {
+            id: "ocean-mindfulness",
+            title: "Ocean Mindfulness",
+            description: "Calm your mind with soothing ocean waves.",
+            category: "meditation",
+            tags: ["relax"],
+            backgroundSrc: "/videos/ocean-background.mp4",
+            audioSrc: "/audio/ocean-background.mp3",
+            duration: 300,
+            guidanceFiles: ["/audio/ocean-intro.mp3", "/audio/ocean-middle.mp3", "/audio/ocean-end.mp3"],
+            guidanceTiming: [10, 150, 270],
+            icon: <Waves size={24} />,
+        },
+        {
+            id: "sereno-zen",
+            title: "Sereno Zen",
+            description: "Find focus and clarity even at high speeds.",
+            category: "meditation",
+            tags: ["focus"],
+            backgroundSrc: "/videos/porsche-mountain-drive.mp4",
+            audioSrc: "/audio/sereno-mountain-drive.mp3",
+            duration: 300,
+            guidanceFiles: ["/audio/zen-intro.mp3", "/audio/zen-middle.mp3", "/audio/zen-end.mp3"],
+            guidanceTiming: [10, 150, 270],
+            icon: <Mountain size={24} />,
+        },
+        {
+            id: "charging-chakras",
+            title: "Charging Chakras",
+            description: "Energize your body's energy centers while your car charges.",
+            category: "meditation",
+            tags: ["vitalize"],
+            backgroundSrc: "/videos/charging-chakras.mp4",
+            audioSrc: "/audio/charging-chakras.mp3",
+            duration: 300,
+            guidanceFiles: ["/audio/chakras-intro.mp3", "/audio/chakras-middle.mp3", "/audio/chakras-end.mp3"],
+            guidanceTiming: [10, 150, 270],
+            icon: <Zap size={24} />,
+        },
+    ],
+}
+
+// Export types
+export type VehicleState = "parked" | "charging" | "moving"
+export type AppTheme = "dark" | "light" | "focus" | "vitalize" | "zen"

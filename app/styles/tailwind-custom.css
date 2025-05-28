@@ -1,0 +1,24 @@
+@layer components {
+    /* Custom range input styling */
+    input[type="range"] {
+        @apply appearance-none h-1 bg-white/20 rounded-full;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        @apply appearance-none w-4 h-4 rounded-full bg-white cursor-pointer shadow-md;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        @apply w-4 h-4 rounded-full bg-white cursor-pointer border-0 shadow-md;
+    }
+
+    /* Active state for buttons */
+    .active-scale {
+        @apply active:scale-95 transition-transform;
+    }
+
+    /* Transition for all interactive elements */
+    .interactive {
+        @apply transition-all duration-200 ease-in-out;
+    }
+}
