@@ -61,14 +61,25 @@ export default function TestResultsPage() {
             const response = await fetch("/api/test-results")
             console.log("Fetch response status:", response.status)
 
-            const data = await response.json()
-            console.log("Fetched data:", data)
-
             if (!response.ok) {
-                console.error("Fetch error:", data)
-                alert(`Error fetching results: ${data.error || "Unknown error"}`)
+                // Handle non-OK responses before trying to parse JSON
+                console.error("API Error:", response.status, response.statusText)
+
+                try {
+                    // Try to parse error response as JSON
+                    const errorData = await response.json()
+                    console.error("Error details:", errorData)
+                    alert(`Error fetching results: ${errorData.error || "Unknown error"}`)
+                } catch {
+                    // If JSON parsing fails, use status text
+                    alert(`Error fetching results: ${response.statusText}`)
+                }
+
                 return
             }
+
+            const data = await response.json()
+            console.log("Fetched data:", data)
 
             setResults(data.data || [])
             console.log("Set results:", data.data?.length || 0, "records")
