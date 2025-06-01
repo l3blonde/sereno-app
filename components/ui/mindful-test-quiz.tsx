@@ -108,7 +108,7 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
     }
 
     const handleNext = async () => {
-        console.log("🔄 handleNext called, currentStep:", currentStep)
+        console.log("🔄 handleNext called, currentStep:", currentStep, "totalSteps:", totalSteps)
 
         if (currentStep === 1) {
             // Validate user data
@@ -119,10 +119,8 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
             console.log("✅ User data validation passed")
         }
 
-        if (currentStep < totalSteps - 1) {
-            console.log("➡️ Moving to next step")
-            setCurrentStep((prev) => prev + 1)
-        } else {
+        // Check if we're at the final step (step 2 = questions, step 3 = completion)
+        if (currentStep === 2) {
             console.log("🏁 COMPLETING QUIZ - FINAL STEP")
 
             // Complete quiz and submit data
@@ -150,6 +148,11 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
 
             // Move to completion step
             setCurrentStep(3)
+        } else if (currentStep < totalSteps - 1) {
+            console.log("➡️ Moving to next step")
+            setCurrentStep((prev) => prev + 1)
+        } else {
+            console.log("⚠️ Already at final step, no action needed")
         }
     }
 
