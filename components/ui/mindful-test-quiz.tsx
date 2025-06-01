@@ -71,26 +71,38 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
 
     const submitTestResults = async (data: QuizData) => {
         try {
+            console.log("=== Submitting test results ===")
+            console.log("Data being sent:", JSON.stringify(data, null, 2))
+
             const response = await fetch("/api/test-results", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                    userData: data.userData,
+                    responses: data.responses,
+                }),
             })
 
+            console.log("Response status:", response.status)
+            console.log("Response headers:", Object.fromEntries(response.headers.entries()))
+
             const result = await response.json()
+            console.log("API Response:", result)
 
             if (!response.ok) {
-                console.error("Error submitting test results:", result.error)
-                // You could show an error message to the user here
+                console.error("API Error:", response.status, result)
+                alert(`Error saving test results: ${result.error || "Unknown error"}`)
                 return false
             }
 
             console.log("Test results submitted successfully:", result)
+            alert("Test results saved successfully!")
             return true
         } catch (error) {
-            console.error("Failed to submit test results:", error)
+            console.error("Network Error:", error)
+            alert(`Network error: ${error instanceof Error ? error.message : "Unknown error"}`)
             return false
         }
     }
@@ -267,18 +279,19 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
             <div className="bg-gray-800/50 rounded-lg p-6">
                 <h3 className="text-white font-semibold mb-3">Midday Stress Reset</h3>
                 <p className="text-gray-300 mb-3">
-                    <strong>Situation:</strong> You've just had a stressful video call and step into your car for a mental reset.
+                    <strong>Situation:</strong> You&apos;ve just had a stressful video call and step into your car for a mental
+                    reset.
                 </p>
                 <p className="text-blue-300 italic">
-                    <strong>Task:</strong> Open the Sereno app, tap the 'Breathe' button, choose a quick calm breathing exercise,
-                    set the timer for 2 minutes, and use it to help you reset mentally.
+                    <strong>Task:</strong> Open the Sereno app, tap the &apos;Breathe&apos; button, choose a quick calm breathing
+                    exercise, set the timer for 2 minutes, and use it to help you reset mentally.
                 </p>
             </div>
 
             {/* Question 2 */}
             <div>
                 <label className="block text-white font-semibold mb-3">
-                    Was it easy to find and start the "Morning Energise" session?
+                    Was it easy to find and start the &quot;Morning Energise&quot; session?
                 </label>
                 <div className="space-y-2">
                     {["Yes", "Took me a while", "No"].map((option) => (

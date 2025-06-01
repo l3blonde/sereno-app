@@ -56,10 +56,22 @@ export default function TestResultsPage() {
 
     const fetchResults = async () => {
         try {
+            console.log("=== Fetching test results ===")
+
             const response = await fetch("/api/test-results")
+            console.log("Fetch response status:", response.status)
+
             const data = await response.json()
+            console.log("Fetched data:", data)
+
+            if (!response.ok) {
+                console.error("Fetch error:", data)
+                alert(`Error fetching results: ${data.error || "Unknown error"}`)
+                return
+            }
 
             setResults(data.data || [])
+            console.log("Set results:", data.data?.length || 0, "records")
 
             // Calculate stats
             const total = data.total || 0
@@ -71,10 +83,13 @@ export default function TestResultsPage() {
             setStats({
                 total,
                 thisWeek,
-                completionRate: total > 0 ? 100 : 0, // Assuming all fetched results are completed
+                completionRate: total > 0 ? 100 : 0,
             })
+
+            console.log("Updated stats:", { total, thisWeek })
         } catch (error) {
             console.error("Error fetching results:", error)
+            alert(`Network error: ${error instanceof Error ? error.message : "Unknown error"}`)
         } finally {
             setLoading(false)
         }
