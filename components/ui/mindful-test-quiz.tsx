@@ -71,8 +71,8 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
 
     const submitTestResults = async (data: QuizData) => {
         try {
-            console.log("=== Submitting test results ===")
-            console.log("Data being sent:", JSON.stringify(data, null, 2))
+            console.log("🚀 === SUBMITTING TEST RESULTS ===")
+            console.log("📊 Data being sent:", JSON.stringify(data, null, 2))
 
             const response = await fetch("/api/test-results", {
                 method: "POST",
@@ -85,37 +85,46 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
                 }),
             })
 
-            console.log("Response status:", response.status)
-            console.log("Response headers:", Object.fromEntries(response.headers.entries()))
+            console.log("📡 Response status:", response.status)
+            console.log("📋 Response headers:", Object.fromEntries(response.headers.entries()))
 
             const result = await response.json()
-            console.log("API Response:", result)
+            console.log("✅ API Response:", result)
 
             if (!response.ok) {
-                console.error("API Error:", response.status, result)
+                console.error("❌ API Error:", response.status, result)
                 alert(`Error saving test results: ${result.error || "Unknown error"}`)
                 return false
             }
 
-            console.log("Test results submitted successfully:", result)
-            alert("Test results saved successfully!")
+            console.log("🎉 Test results submitted successfully:", result)
+            alert("✅ Test results saved successfully!")
             return true
         } catch (error) {
-            console.error("Network Error:", error)
-            alert(`Network error: ${error instanceof Error ? error.message : "Unknown error"}`)
+            console.error("🔥 Network Error:", error)
+            alert(`❌ Network error: ${error instanceof Error ? error.message : "Unknown error"}`)
             return false
         }
     }
 
     const handleNext = async () => {
+        console.log("🔄 handleNext called, currentStep:", currentStep)
+
         if (currentStep === 1) {
             // Validate user data
-            if (!userData.name || !userData.age) return
+            if (!userData.name || !userData.age) {
+                console.log("❌ Validation failed: missing name or age")
+                return
+            }
+            console.log("✅ User data validation passed")
         }
 
         if (currentStep < totalSteps - 1) {
+            console.log("➡️ Moving to next step")
             setCurrentStep((prev) => prev + 1)
         } else {
+            console.log("🏁 COMPLETING QUIZ - FINAL STEP")
+
             // Complete quiz and submit data
             const quizData: QuizData = {
                 userData,
@@ -124,11 +133,13 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
                 timestamp: new Date(),
             }
 
+            console.log("📝 Final quiz data:", quizData)
+
             // Submit to API
-            await submitTestResults(quizData)
+            const success = await submitTestResults(quizData)
+            console.log("💾 Submission result:", success)
 
             // Complete the quiz regardless of submission success
-            // We don't want to block the user if there's a network issue
             onCompleteAction(quizData)
         }
     }

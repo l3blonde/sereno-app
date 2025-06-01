@@ -51,7 +51,7 @@ export default function TestResultsPage() {
             }
         }
 
-        void loadResults() // Use void operator to explicitly ignore the Promise
+        void loadResults()
     }, [])
 
     const fetchResults = async () => {
@@ -101,17 +101,19 @@ export default function TestResultsPage() {
             return
         }
 
-        const pdf = new jsPDF("l", "mm", "a4") // Landscape orientation
+        const pdf = new jsPDF("p", "mm", "a4") // Portrait orientation
         const pageWidth = pdf.internal.pageSize.getWidth()
         const pageHeight = pdf.internal.pageSize.getHeight()
+        const margin = 20 // Page margins
 
-        // Monochromatic color palette
+        // Clean color palette
         const colors = {
             black: [0, 0, 0],
-            darkGray: [40, 40, 40],
+            darkGray: [60, 60, 60],
             mediumGray: [120, 120, 120],
-            lightGray: [200, 200, 200],
+            lightGray: [240, 240, 240],
             white: [255, 255, 255],
+            accent: [41, 128, 185], // Blue accent
         }
 
         const setColor = (colorArray: number[]) => {
@@ -122,246 +124,252 @@ export default function TestResultsPage() {
             pdf.setTextColor(colorArray[0], colorArray[1], colorArray[2])
         }
 
-        const addColoredRect = (x: number, y: number, width: number, height: number, colorArray: number[]) => {
+        const addRect = (x: number, y: number, width: number, height: number, colorArray: number[]) => {
             setColor(colorArray)
             pdf.rect(x, y, width, height, "F")
         }
 
         const addPage = () => {
-            pdf.addPage("l")
-            // Add subtle background pattern
-            addColoredRect(0, 0, pageWidth, pageHeight, colors.white)
-
-            // Add geometric pattern in background
-            setColor(colors.lightGray)
-            for (let i = 0; i < pageWidth; i += 20) {
-                pdf.setLineWidth(0.1)
-                pdf.setDrawColor(colors.lightGray[0], colors.lightGray[1], colors.lightGray[2])
-                pdf.line(i, 0, i, pageHeight)
-            }
+            pdf.addPage("p")
         }
 
         // PAGE 1: COVER PAGE
-        addColoredRect(0, 0, pageWidth, pageHeight, colors.white)
+        setColor(colors.white)
+        pdf.rect(0, 0, pageWidth, pageHeight, "F")
 
-        // Header stripe
-        addColoredRect(0, 0, pageWidth, 40, colors.black)
-
-        // Main title area
-        addColoredRect(0, 40, pageWidth, 120, colors.white)
-
-        // Accent stripe
-        addColoredRect(0, 160, pageWidth, 8, colors.darkGray)
-
-        // Content area
-        addColoredRect(0, 168, pageWidth, pageHeight - 168, colors.white)
+        // Header section
+        addRect(margin, margin, pageWidth - 2 * margin, 60, colors.accent)
 
         // Title
         setTextColor(colors.white)
-        pdf.setFontSize(48)
+        pdf.setFontSize(36)
         pdf.setFont("helvetica", "bold")
-        pdf.text("SERENO", pageWidth / 2, 28, { align: "center" })
+        pdf.text("SERENO", pageWidth / 2, margin + 25, { align: "center" })
 
-        setTextColor(colors.black)
-        pdf.setFontSize(32)
+        pdf.setFontSize(14)
         pdf.setFont("helvetica", "normal")
-        pdf.text("User Experience Research Report", pageWidth / 2, 90, { align: "center" })
-
-        pdf.setFontSize(18)
-        setTextColor(colors.mediumGray)
-        pdf.text("Concept Testing Results & Analysis", pageWidth / 2, 110, { align: "center" })
+        pdf.text("User Experience Research Report", pageWidth / 2, margin + 45, { align: "center" })
 
         // Study details
         setTextColor(colors.darkGray)
-        pdf.setFontSize(14)
+        pdf.setFontSize(16)
+        pdf.setFont("helvetica", "bold")
+        pdf.text("Concept Testing Results & Analysis", pageWidth / 2, margin + 100, { align: "center" })
+
         const currentDate = new Date().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
         })
-        pdf.text(`Study Period: ${currentDate}`, pageWidth / 2, 140, { align: "center" })
-        pdf.text(`Total Participants: ${results.length}`, pageWidth / 2, 155, { align: "center" })
 
-        // Bottom section with geometric elements
-        setColor(colors.lightGray)
-        pdf.circle(50, pageHeight - 50, 20, "F")
-        pdf.circle(pageWidth - 50, pageHeight - 50, 15, "F")
-
-        setTextColor(colors.mediumGray)
         pdf.setFontSize(12)
-        pdf.text("Confidential Research Document", pageWidth / 2, pageHeight - 20, { align: "center" })
+        pdf.setFont("helvetica", "normal")
+        pdf.text(`Study Period: ${currentDate}`, pageWidth / 2, margin + 130, { align: "center" })
+        pdf.text(`Total Participants: ${results.length}`, pageWidth / 2, margin + 150, { align: "center" })
+
+        // Footer
+        setTextColor(colors.mediumGray)
+        pdf.setFontSize(10)
+        pdf.text("Confidential Research Document", pageWidth / 2, pageHeight - margin, { align: "center" })
 
         // PAGE 2: EXECUTIVE SUMMARY
         addPage()
 
-        // Header
-        addColoredRect(0, 0, pageWidth, 30, colors.darkGray)
-        setTextColor(colors.white)
-        pdf.setFontSize(24)
-        pdf.setFont("helvetica", "bold")
-        pdf.text("Executive Summary", 40, 20)
+        let yPos = margin + 20
 
-        let yPos = 60
+        // Header
+        addRect(margin, margin, pageWidth - 2 * margin, 20, colors.darkGray)
+        setTextColor(colors.white)
+        pdf.setFontSize(18)
+        pdf.setFont("helvetica", "bold")
+        pdf.text("Executive Summary", margin + 10, margin + 14)
+
+        yPos = margin + 40
 
         // Key metrics section
         setTextColor(colors.black)
-        pdf.setFontSize(18)
+        pdf.setFontSize(16)
         pdf.setFont("helvetica", "bold")
-        pdf.text("Key Metrics", 40, yPos)
+        pdf.text("Key Metrics", margin, yPos)
         yPos += 20
 
-        // Metrics boxes
+        // Filter valid responses
+        const validResponses = results.filter((r) => r.responses && Object.keys(r.responses).length > 5)
+
+        // Metrics in a clean table format
         const metrics = [
             { label: "Total Participants", value: results.length.toString() },
+            { label: "Complete Responses", value: validResponses.length.toString() },
             { label: "Completion Rate", value: "100%" },
             {
-                label: "Would Use Again",
+                label: "Would Use Again (Yes)",
                 value:
-                    results.length > 0
-                        ? `${Math.round((results.filter((r) => r.responses?.wouldUseAgain === "Yes").length / results.length) * 100)}%`
+                    validResponses.length > 0
+                        ? `${Math.round((validResponses.filter((r) => r.responses?.wouldUseAgain === "Yes").length / validResponses.length) * 100)}%`
                         : "0%",
             },
             {
-                label: "Easy to Use",
+                label: "Easy Interface",
                 value:
-                    results.length > 0
-                        ? `${Math.round((results.filter((r) => r.responses?.interfaceEase === "Yes").length / results.length) * 100)}%`
+                    validResponses.length > 0
+                        ? `${Math.round((validResponses.filter((r) => r.responses?.interfaceEase === "Yes").length / validResponses.length) * 100)}%`
                         : "0%",
             },
         ]
 
-        metrics.forEach((metric, metricIndex) => {
-            const x = 40 + metricIndex * 160
-            addColoredRect(x, yPos, 140, 50, colors.lightGray)
-            addColoredRect(x, yPos, 140, 20, colors.darkGray)
-
-            setTextColor(colors.white)
-            pdf.setFontSize(12)
-            pdf.setFont("helvetica", "bold")
-            pdf.text(metric.label, x + 70, yPos + 14, { align: "center" })
+        metrics.forEach((metric) => {
+            addRect(margin, yPos, pageWidth - 2 * margin, 15, colors.lightGray)
 
             setTextColor(colors.black)
-            pdf.setFontSize(24)
+            pdf.setFontSize(11)
             pdf.setFont("helvetica", "bold")
-            pdf.text(metric.value, x + 70, yPos + 40, { align: "center" })
+            pdf.text(metric.label, margin + 5, yPos + 10)
+
+            pdf.setFont("helvetica", "normal")
+            pdf.text(metric.value, pageWidth - margin - 30, yPos + 10)
+
+            yPos += 20
         })
 
-        yPos += 80
+        yPos += 20
 
         // Key findings
         setTextColor(colors.black)
-        pdf.setFontSize(18)
+        pdf.setFontSize(16)
         pdf.setFont("helvetica", "bold")
-        pdf.text("Key Findings", 40, yPos)
+        pdf.text("Key Findings", margin, yPos)
         yPos += 20
 
-        const validResponses = results.filter((r) => r.responses && Object.keys(r.responses).length > 2)
-        const findings = [
-            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.findSession === "Yes").length / validResponses.length) * 100) : 0}% found it easy to start breathing sessions`,
-            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.voiceGuidance === "Very clear").length / validResponses.length) * 100) : 0}% rated voice guidance as very clear`,
-            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.audioPlayer === "Easy and clear").length / validResponses.length) * 100) : 0}% found the audio player easy to use`,
-            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.wouldUseAgain === "Yes").length / validResponses.length) * 100) : 0}% would use Sereno again for wellness activities`,
-        ]
+        if (validResponses.length > 0) {
+            const findings = [
+                `${Math.round((validResponses.filter((r) => r.responses?.findSession === "Yes").length / validResponses.length) * 100)}% found it easy to start breathing sessions`,
+                `${Math.round((validResponses.filter((r) => r.responses?.voiceGuidance === "Very clear").length / validResponses.length) * 100)}% rated voice guidance as very clear`,
+                `${Math.round((validResponses.filter((r) => r.responses?.audioPlayer === "Easy and clear").length / validResponses.length) * 100)}% found the audio player easy to use`,
+                `${Math.round((validResponses.filter((r) => r.responses?.wouldUseAgain === "Yes").length / validResponses.length) * 100)}% would use Sereno again for wellness activities`,
+            ]
 
-        pdf.setFontSize(12)
-        pdf.setFont("helvetica", "normal")
-        setTextColor(colors.darkGray)
+            pdf.setFontSize(11)
+            pdf.setFont("helvetica", "normal")
+            setTextColor(colors.darkGray)
 
-        findings.forEach((finding) => {
-            // Bullet point
-            setColor(colors.darkGray)
-            pdf.circle(45, yPos + 5, 2, "F")
-
-            pdf.text(finding, 55, yPos + 8)
-            yPos += 15
-        })
-
-        if (results.length > validResponses.length) {
-            yPos += 10
+            findings.forEach((finding) => {
+                pdf.text(`• ${finding}`, margin + 5, yPos)
+                yPos += 15
+            })
+        } else {
             setTextColor(colors.mediumGray)
-            pdf.setFontSize(10)
-            pdf.text(
-                `Note: ${results.length - validResponses.length} incomplete test entries excluded from analysis`,
-                55,
-                yPos,
-            )
+            pdf.setFontSize(11)
+            pdf.text("No complete test responses available for analysis.", margin + 5, yPos)
         }
 
-        // PAGE 3: DETAILED RESULTS
-        addPage()
-
-        // Header
-        addColoredRect(0, 0, pageWidth, 30, colors.darkGray)
-        setTextColor(colors.white)
-        pdf.setFontSize(24)
-        pdf.setFont("helvetica", "bold")
-        pdf.text("Detailed Participant Results", 40, 20)
-
-        yPos = 60
-
+        // PAGE 3+: DETAILED RESULTS
         results.forEach((result, resultIndex) => {
-            if (yPos > pageHeight - 80) {
-                addPage()
-                yPos = 60
-            }
+            addPage()
+            yPos = margin + 20
 
-            // Participant header
-            addColoredRect(40, yPos - 5, pageWidth - 80, 25, colors.lightGray)
+            // Header
+            addRect(margin, margin, pageWidth - 2 * margin, 20, colors.darkGray)
+            setTextColor(colors.white)
+            pdf.setFontSize(16)
+            pdf.setFont("helvetica", "bold")
+            pdf.text(`Participant ${resultIndex + 1}: ${result.user_data.name}`, margin + 10, margin + 14)
+
+            yPos = margin + 40
+
+            // Participant info
             setTextColor(colors.black)
             pdf.setFontSize(14)
             pdf.setFont("helvetica", "bold")
-            pdf.text(`Participant ${resultIndex + 1}: ${result.user_data.name}`, 50, yPos + 8)
+            pdf.text("Participant Information", margin, yPos)
+            yPos += 15
 
-            setTextColor(colors.mediumGray)
-            pdf.setFontSize(10)
-            pdf.text(
-                `${result.user_data.age} years old • ${result.user_data.location} • ${result.user_data.profession}`,
-                50,
-                yPos + 18,
-            )
+            const userInfo = [
+                { label: "Name", value: result.user_data.name },
+                { label: "Age", value: result.user_data.age.toString() },
+                { label: "Location", value: result.user_data.location },
+                { label: "Profession", value: result.user_data.profession },
+                { label: "Drives", value: result.user_data.drives ? "Yes" : "No" },
+                { label: "Car", value: result.user_data.car || "N/A" },
+            ]
 
-            yPos += 35
+            userInfo.forEach((info) => {
+                setTextColor(colors.darkGray)
+                pdf.setFontSize(10)
+                pdf.setFont("helvetica", "bold")
+                pdf.text(`${info.label}:`, margin + 5, yPos)
+                pdf.setFont("helvetica", "normal")
+                pdf.text(info.value, margin + 50, yPos)
+                yPos += 12
+            })
 
-            // Key responses in columns
+            yPos += 15
+
+            // Test responses
+            setTextColor(colors.black)
+            pdf.setFontSize(14)
+            pdf.setFont("helvetica", "bold")
+            pdf.text("Test Responses", margin, yPos)
+            yPos += 15
+
             const responses = [
                 { label: "Wellness Frequency", value: result.responses?.wellnessFrequency || "N/A" },
                 { label: "Easy to Find Session", value: result.responses?.findSession || "N/A" },
                 { label: "Voice Guidance", value: result.responses?.voiceGuidance || "N/A" },
                 { label: "Audio Player", value: result.responses?.audioPlayer || "N/A" },
+                { label: "Break Choice", value: result.responses?.breakChoice || "N/A" },
+                { label: "Language Preference", value: result.responses?.languagePreference || "N/A" },
+                { label: "Music Preference", value: result.responses?.musicPreference || "N/A" },
+                { label: "Interface Ease", value: result.responses?.interfaceEase || "N/A" },
+                { label: "Confusing", value: result.responses?.confusing || "N/A" },
                 { label: "Would Use Again", value: result.responses?.wouldUseAgain || "N/A" },
             ]
 
-            setTextColor(colors.darkGray)
-            pdf.setFontSize(10)
-            pdf.setFont("helvetica", "normal")
-
-            responses.forEach((response, respIndex) => {
-                const x = 50 + (respIndex % 2) * 300
-                const y = yPos + Math.floor(respIndex / 2) * 15 // Increased spacing from 12 to 15
-
-                pdf.setFont("helvetica", "bold")
-                pdf.text(`${response.label}:`, x, y)
-                pdf.setFont("helvetica", "normal")
-                pdf.text(response.value, x + 100, y) // Increased spacing from 80 to 100
-            })
-
-            yPos += 50 // Increased from 40 to 50 for better spacing
-
-            // Suggestions if any
-            if (result.responses?.suggestions) {
-                setTextColor(colors.black)
-                pdf.setFontSize(10)
-                pdf.setFont("helvetica", "bold")
-                pdf.text("Suggestions:", 50, yPos)
+            responses.forEach((response) => {
+                if (yPos > pageHeight - 40) {
+                    addPage()
+                    yPos = margin + 20
+                }
 
                 setTextColor(colors.darkGray)
+                pdf.setFontSize(10)
+                pdf.setFont("helvetica", "bold")
+                pdf.text(`${response.label}:`, margin + 5, yPos)
                 pdf.setFont("helvetica", "normal")
-                const suggestionLines = pdf.splitTextToSize(result.responses.suggestions, pageWidth - 120)
-                pdf.text(suggestionLines, 50, yPos + 10)
-                yPos += 10 + suggestionLines.length * 4
+                pdf.text(response.value, margin + 70, yPos)
+                yPos += 12
+            })
+
+            // Suggestions
+            if (result.responses?.suggestions) {
+                yPos += 10
+                setTextColor(colors.black)
+                pdf.setFontSize(12)
+                pdf.setFont("helvetica", "bold")
+                pdf.text("Suggestions:", margin + 5, yPos)
+                yPos += 10
+
+                setTextColor(colors.darkGray)
+                pdf.setFontSize(10)
+                pdf.setFont("helvetica", "normal")
+                const suggestionLines = pdf.splitTextToSize(result.responses.suggestions, pageWidth - 2 * margin - 10)
+                pdf.text(suggestionLines, margin + 5, yPos)
             }
 
-            yPos += 20
+            // Why use again
+            if (result.responses?.whyUseAgain) {
+                yPos += 20
+                setTextColor(colors.black)
+                pdf.setFontSize(12)
+                pdf.setFont("helvetica", "bold")
+                pdf.text("Why Use Again:", margin + 5, yPos)
+                yPos += 10
+
+                setTextColor(colors.darkGray)
+                pdf.setFontSize(10)
+                pdf.setFont("helvetica", "normal")
+                const whyLines = pdf.splitTextToSize(result.responses.whyUseAgain, pageWidth - 2 * margin - 10)
+                pdf.text(whyLines, margin + 5, yPos)
+            }
         })
 
         // Save the PDF
@@ -394,7 +402,7 @@ export default function TestResultsPage() {
                         className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-800 to-black hover:from-gray-700 hover:to-gray-900 text-white rounded-lg transition-all duration-200 border border-gray-600 shadow-lg"
                     >
                         <Download size={20} />
-                        Export Beautiful PDF Report
+                        Export PDF Report
                     </button>
                 </div>
 
@@ -459,14 +467,16 @@ export default function TestResultsPage() {
                                     <td className="p-4">
                       <span
                           className={`px-2 py-1 rounded text-xs ${
-                              result.responses.wouldUseAgain === "Yes"
+                              result.responses?.wouldUseAgain === "Yes"
                                   ? "bg-green-900 text-green-300"
-                                  : result.responses.wouldUseAgain === "Maybe"
+                                  : result.responses?.wouldUseAgain === "Maybe"
                                       ? "bg-yellow-900 text-yellow-300"
-                                      : "bg-red-900 text-red-300"
+                                      : result.responses?.wouldUseAgain === "No"
+                                          ? "bg-red-900 text-red-300"
+                                          : "bg-gray-600 text-gray-300"
                           }`}
                       >
-                        {result.responses.wouldUseAgain}
+                        {result.responses?.wouldUseAgain || "N/A"}
                       </span>
                                     </td>
                                     <td className="p-4 text-gray-400">{new Date(result.created_at).toLocaleDateString()}</td>
@@ -527,41 +537,41 @@ export default function TestResultsPage() {
                                     <h4 className="text-lg font-semibold mb-3">Test Responses</h4>
                                     <div className="space-y-3 text-sm">
                                         <div>
-                                            <strong>Wellness Frequency:</strong> {selectedResult.responses.wellnessFrequency}
+                                            <strong>Wellness Frequency:</strong> {selectedResult.responses?.wellnessFrequency || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Find Session:</strong> {selectedResult.responses.findSession}
+                                            <strong>Find Session:</strong> {selectedResult.responses?.findSession || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Voice Guidance:</strong> {selectedResult.responses.voiceGuidance}
+                                            <strong>Voice Guidance:</strong> {selectedResult.responses?.voiceGuidance || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Audio Player:</strong> {selectedResult.responses.audioPlayer}
+                                            <strong>Audio Player:</strong> {selectedResult.responses?.audioPlayer || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Break Choice:</strong> {selectedResult.responses.breakChoice}
+                                            <strong>Break Choice:</strong> {selectedResult.responses?.breakChoice || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Language Preference:</strong> {selectedResult.responses.languagePreference}
+                                            <strong>Language Preference:</strong> {selectedResult.responses?.languagePreference || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Music Preference:</strong> {selectedResult.responses.musicPreference}
+                                            <strong>Music Preference:</strong> {selectedResult.responses?.musicPreference || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Interface Ease:</strong> {selectedResult.responses.interfaceEase}
+                                            <strong>Interface Ease:</strong> {selectedResult.responses?.interfaceEase || "N/A"}
                                         </div>
                                         <div>
-                                            <strong>Confusing:</strong> {selectedResult.responses.confusing}
+                                            <strong>Confusing:</strong> {selectedResult.responses?.confusing || "N/A"}
                                         </div>
-                                        {selectedResult.responses.suggestions && (
+                                        {selectedResult.responses?.suggestions && (
                                             <div>
                                                 <strong>Suggestions:</strong> {selectedResult.responses.suggestions}
                                             </div>
                                         )}
                                         <div>
-                                            <strong>Would Use Again:</strong> {selectedResult.responses.wouldUseAgain}
+                                            <strong>Would Use Again:</strong> {selectedResult.responses?.wouldUseAgain || "N/A"}
                                         </div>
-                                        {selectedResult.responses.whyUseAgain && (
+                                        {selectedResult.responses?.whyUseAgain && (
                                             <div>
                                                 <strong>Why Use Again:</strong> {selectedResult.responses.whyUseAgain}
                                             </div>
