@@ -255,11 +255,12 @@ export default function TestResultsPage() {
         pdf.text("Key Findings", 40, yPos)
         yPos += 20
 
+        const validResponses = results.filter((r) => r.responses && Object.keys(r.responses).length > 2)
         const findings = [
-            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.findSession === "Yes").length / results.length) * 100) : 0}% found it easy to start breathing sessions`,
-            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.voiceGuidance === "Very clear").length / results.length) * 100) : 0}% rated voice guidance as very clear`,
-            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.audioPlayer === "Easy and clear").length / results.length) * 100) : 0}% found the audio player easy to use`,
-            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.wouldUseAgain === "Yes").length / results.length) * 100) : 0}% would use Sereno again for wellness activities`,
+            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.findSession === "Yes").length / validResponses.length) * 100) : 0}% found it easy to start breathing sessions`,
+            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.voiceGuidance === "Very clear").length / validResponses.length) * 100) : 0}% rated voice guidance as very clear`,
+            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.audioPlayer === "Easy and clear").length / validResponses.length) * 100) : 0}% found the audio player easy to use`,
+            `${validResponses.length > 0 ? Math.round((validResponses.filter((r) => r.responses?.wouldUseAgain === "Yes").length / validResponses.length) * 100) : 0}% would use Sereno again for wellness activities`,
         ]
 
         pdf.setFontSize(12)
@@ -274,6 +275,17 @@ export default function TestResultsPage() {
             pdf.text(finding, 55, yPos + 8)
             yPos += 15
         })
+
+        if (results.length > validResponses.length) {
+            yPos += 10
+            setTextColor(colors.mediumGray)
+            pdf.setFontSize(10)
+            pdf.text(
+                `Note: ${results.length - validResponses.length} incomplete test entries excluded from analysis`,
+                55,
+                yPos,
+            )
+        }
 
         // PAGE 3: DETAILED RESULTS
         addPage()
@@ -325,15 +337,15 @@ export default function TestResultsPage() {
 
             responses.forEach((response, respIndex) => {
                 const x = 50 + (respIndex % 2) * 300
-                const y = yPos + Math.floor(respIndex / 2) * 12
+                const y = yPos + Math.floor(respIndex / 2) * 15 // Increased spacing from 12 to 15
 
                 pdf.setFont("helvetica", "bold")
                 pdf.text(`${response.label}:`, x, y)
                 pdf.setFont("helvetica", "normal")
-                pdf.text(response.value, x + 80, y)
+                pdf.text(response.value, x + 100, y) // Increased spacing from 80 to 100
             })
 
-            yPos += 40
+            yPos += 50 // Increased from 40 to 50 for better spacing
 
             // Suggestions if any
             if (result.responses?.suggestions) {
