@@ -216,11 +216,17 @@ export default function TestResultsPage() {
             { label: "Completion Rate", value: "100%" },
             {
                 label: "Would Use Again",
-                value: `${Math.round((results.filter((r) => r.responses.wouldUseAgain === "Yes").length / results.length) * 100)}%`,
+                value:
+                    results.length > 0
+                        ? `${Math.round((results.filter((r) => r.responses?.wouldUseAgain === "Yes").length / results.length) * 100)}%`
+                        : "0%",
             },
             {
                 label: "Easy to Use",
-                value: `${Math.round((results.filter((r) => r.responses.interfaceEase === "Yes").length / results.length) * 100)}%`,
+                value:
+                    results.length > 0
+                        ? `${Math.round((results.filter((r) => r.responses?.interfaceEase === "Yes").length / results.length) * 100)}%`
+                        : "0%",
             },
         ]
 
@@ -250,10 +256,10 @@ export default function TestResultsPage() {
         yPos += 20
 
         const findings = [
-            `${Math.round((results.filter((r) => r.responses.findSession === "Yes").length / results.length) * 100)}% found it easy to start breathing sessions`,
-            `${Math.round((results.filter((r) => r.responses.voiceGuidance === "Very clear").length / results.length) * 100)}% rated voice guidance as very clear`,
-            `${Math.round((results.filter((r) => r.responses.audioPlayer === "Easy and clear").length / results.length) * 100)}% found the audio player easy to use`,
-            `${Math.round((results.filter((r) => r.responses.wouldUseAgain === "Yes").length / results.length) * 100)}% would use Sereno again for wellness activities`,
+            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.findSession === "Yes").length / results.length) * 100) : 0}% found it easy to start breathing sessions`,
+            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.voiceGuidance === "Very clear").length / results.length) * 100) : 0}% rated voice guidance as very clear`,
+            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.audioPlayer === "Easy and clear").length / results.length) * 100) : 0}% found the audio player easy to use`,
+            `${results.length > 0 ? Math.round((results.filter((r) => r.responses?.wouldUseAgain === "Yes").length / results.length) * 100) : 0}% would use Sereno again for wellness activities`,
         ]
 
         pdf.setFontSize(12)
@@ -306,11 +312,11 @@ export default function TestResultsPage() {
 
             // Key responses in columns
             const responses = [
-                { label: "Wellness Frequency", value: result.responses.wellnessFrequency },
-                { label: "Easy to Find Session", value: result.responses.findSession },
-                { label: "Voice Guidance", value: result.responses.voiceGuidance },
-                { label: "Audio Player", value: result.responses.audioPlayer },
-                { label: "Would Use Again", value: result.responses.wouldUseAgain },
+                { label: "Wellness Frequency", value: result.responses?.wellnessFrequency || "N/A" },
+                { label: "Easy to Find Session", value: result.responses?.findSession || "N/A" },
+                { label: "Voice Guidance", value: result.responses?.voiceGuidance || "N/A" },
+                { label: "Audio Player", value: result.responses?.audioPlayer || "N/A" },
+                { label: "Would Use Again", value: result.responses?.wouldUseAgain || "N/A" },
             ]
 
             setTextColor(colors.darkGray)
@@ -330,7 +336,7 @@ export default function TestResultsPage() {
             yPos += 40
 
             // Suggestions if any
-            if (result.responses.suggestions) {
+            if (result.responses?.suggestions) {
                 setTextColor(colors.black)
                 pdf.setFontSize(10)
                 pdf.setFont("helvetica", "bold")
