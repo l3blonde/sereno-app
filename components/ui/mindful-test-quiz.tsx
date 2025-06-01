@@ -135,12 +135,21 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
 
             console.log("📝 Final quiz data:", quizData)
 
-            // Submit to API
+            // Submit to API FIRST
             const success = await submitTestResults(quizData)
             console.log("💾 Submission result:", success)
 
-            // Complete the quiz regardless of submission success
-            onCompleteAction(quizData)
+            // ALWAYS call onCompleteAction regardless of submission success
+            console.log("🎯 Calling onCompleteAction with data:", quizData)
+            try {
+                onCompleteAction(quizData)
+                console.log("✅ onCompleteAction called successfully")
+            } catch (error) {
+                console.error("❌ Error calling onCompleteAction:", error)
+            }
+
+            // Move to completion step
+            setCurrentStep(3)
         }
     }
 
@@ -582,7 +591,10 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
                     Thank you for testing Sereno! Your feedback helps us improve the experience for everyone.
                 </p>
                 <button
-                    onClick={() => (window.location.href = "/admin/test-results")}
+                    onClick={() => {
+                        console.log("🔄 Redirecting to admin page...")
+                        window.location.href = "/admin/test-results"
+                    }}
                     className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                 >
                     View Test Results
@@ -629,7 +641,12 @@ export function MindfulTestQuiz({ onCompleteAction }: { onCompleteAction: (data:
 
                         {currentStep < 3 && (
                             <button
-                                onClick={handleNext}
+                                onClick={() => {
+                                    console.log("🔘 Complete Test button clicked!")
+                                    handleNext().catch((error) => {
+                                        console.error("❌ Error in handleNext:", error)
+                                    })
+                                }}
                                 disabled={currentStep === 1 && (!userData.name || !userData.age)}
                                 className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
                             >
