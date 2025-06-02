@@ -1,7 +1,3 @@
-/**
- * Root layout - CarPlay app shell with sidebars and main content area
- * @description Provides system dock (left), status bar (right), and main content wrapper
- */
 import type React from "react"
 import "./globals.css"
 import type { Metadata, Viewport } from "next"
@@ -14,6 +10,7 @@ import { ThemeProvider } from "@/contexts/theme-context"
 import { SystemDock } from "@/components/ui/system-dock"
 import { StatusBar } from "@/components/ui/status-bar"
 import { OrientationWarning } from "@/components/ui/orientation-warning"
+import { PWAInstaller } from "@/components/pwa-installer"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 const barlowCondensed = Barlow_Condensed({
@@ -26,6 +23,12 @@ export const metadata: Metadata = {
     title: "Sereno - CarPlay Wellness",
     description: "CarPlay-optimized wellness and navigation app",
     generator: "v0.dev",
+    manifest: "/manifest.json",
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "black",
+        title: "Sereno",
+    },
 }
 
 export const viewport: Viewport = {
@@ -42,6 +45,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={`${inter.variable} ${barlowCondensed.variable}`}>
+        <head>
+            <title>Sereno - CarPlay Wellness</title>
+            <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+            <meta name="theme-color" content="#000000" />
+        </head>
         <body className="carplay-layout">
         <ThemeProvider>
             <OrientationProvider>
@@ -60,6 +68,9 @@ export default function RootLayout({
 
                         {/* Right Sidebar - System Info (All screen sizes) */}
                         <StatusBar />
+
+                        {/* PWA Installer (hidden until install prompt) */}
+                        <PWAInstaller />
                     </AudioProvider>
                 </DrivingModeProvider>
             </OrientationProvider>

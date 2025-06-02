@@ -7,46 +7,35 @@
 
 import { useRef, useEffect, useState } from "react"
 import type { MeditationSession } from "@/lib/meditation/meditation-data"
+import { useAudioContext } from "@/components/audio-service"
 
 interface MeditationSessionViewProps {
     session: MeditationSession
-    onExitAction: () => void
-    isLightTheme?: boolean
     volume: number
     isPlaying: boolean
-    onPlayPauseAction: () => void
-    onRestartAction: () => void
-    onVolumeChangeAction: (volume: number) => void
     voiceEnabled: boolean
-    onVoiceToggleAction: () => void
     audioEnabled: boolean
-    onAudioToggleAction: () => void
     timeRemaining: number
     totalDuration: number
 }
 
 export default function MeditationSessionView({
                                                   session,
-                                                  onExitAction,
-                                                  isLightTheme = false,
                                                   volume,
                                                   isPlaying,
-                                                  onPlayPauseAction,
-                                                  onRestartAction,
-                                                  onVolumeChangeAction,
                                                   voiceEnabled,
-                                                  onVoiceToggleAction,
                                                   audioEnabled,
-                                                  onAudioToggleAction,
                                                   timeRemaining,
                                                   totalDuration,
                                               }: MeditationSessionViewProps) {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const { playAudio } = useAudioContext()
     const [voiceGuidancePlayed, setVoiceGuidancePlayed] = useState({
         intro: false,
         middle: false,
         end: false,
     })
+    const [isVideoReady, setIsVideoReady] = useState(false)
 
     useEffect(() => {
         if (!videoRef.current) return
@@ -55,38 +44,69 @@ export default function MeditationSessionView({
         videoRef.current.muted = !audioEnabled
     }, [volume, audioEnabled])
 
+    // Fixed video play/pause logic to prevent interruption
     useEffect(() => {
-        if (!videoRef.current) return
+        if (!videoRef.current || !isVideoReady) return
+
+        const video = videoRef.current
 
         if (isPlaying) {
-            videoRef.current.play().catch((err) => {
-                console.error("Error playing video:", err)
-            })
-        } else {
-            videoRef.current.pause()
-        }
-    }, [isPlaying])
+            // Add a small delay to prevent rapid play/pause calls
+            const playTimeout = setTimeout(() => {
+                if (video.paused) {
+                    video.play().catch((err) => {
+                        console.error("Error playing video:", err)
+                    })
+                }
+            }, 100)
 
+            return () => clearTimeout(playTimeout)
+        } else {
+            video.pause()
+        }
+    }, [isPlaying, isVideoReady])
+
+    // Handle video loading
     useEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+
+        const handleCanPlay = () => {
+            setIsVideoReady(true)
+        }
+
+        const handleLoadStart = () => {
+            setIsVideoReady(false)
+        }
+
+        video.addEventListener("canplay", handleCanPlay)
+        video.addEventListener("loadstart", handleLoadStart)
+
         return () => {
-            if (videoRef.current) {
-                videoRef.current.pause()
+            video.removeEventListener("canplay", handleCanPlay)
+            video.removeEventListener("loadstart", handleLoadStart)
+            if (video) {
+                video.pause()
             }
         }
     }, [])
 
-    // Voice guidance effect - with proper error checking
+    // Enhanced voice guidance effect with actual audio playback
     useEffect(() => {
-        if (!voiceEnabled || !audioEnabled || !session) return
+        if (!voiceEnabled || !audioEnabled || !session || !playAudio || !session.voiceGuidance) return
 
         const elapsed = totalDuration - timeRemaining
 
         // Only play voice guidance if the session has voiceGuidance property
-        if (session.voiceGuidance) {
-            // Play intro at start (first 5 seconds)
+        if (typeof session.voiceGuidance === "object") {
+            // Play intro at start (2-7 seconds)
             if (elapsed >= 2 && elapsed <= 7 && !voiceGuidancePlayed.intro && session.voiceGuidance.intro) {
-                // Note: playAudio function would need to be passed as prop or imported
                 console.log("Playing intro voice guidance:", session.voiceGuidance.intro)
+                playAudio(session.voiceGuidance.intro, false, 0.8)
+                    .then(() => console.log("Intro voice guidance played successfully"))
+                    .catch((err) => {
+                        console.warn("Could not play intro voice guidance:", err)
+                    })
                 setVoiceGuidancePlayed((prev) => ({ ...prev, intro: true }))
             }
 
@@ -99,16 +119,26 @@ export default function MeditationSessionView({
                 session.voiceGuidance.middle
             ) {
                 console.log("Playing middle voice guidance:", session.voiceGuidance.middle)
+                playAudio(session.voiceGuidance.middle, false, 0.8)
+                    .then(() => console.log("Middle voice guidance played successfully"))
+                    .catch((err) => {
+                        console.warn("Could not play middle voice guidance:", err)
+                    })
                 setVoiceGuidancePlayed((prev) => ({ ...prev, middle: true }))
             }
 
             // Play end guidance (last 10 seconds)
             if (timeRemaining <= 10 && timeRemaining > 5 && !voiceGuidancePlayed.end && session.voiceGuidance.end) {
                 console.log("Playing end voice guidance:", session.voiceGuidance.end)
+                playAudio(session.voiceGuidance.end, false, 0.8)
+                    .then(() => console.log("End voice guidance played successfully"))
+                    .catch((err) => {
+                        console.warn("Could not play end voice guidance:", err)
+                    })
                 setVoiceGuidancePlayed((prev) => ({ ...prev, end: true }))
             }
         }
-    }, [timeRemaining, totalDuration, voiceEnabled, audioEnabled, session, voiceGuidancePlayed])
+    }, [timeRemaining, totalDuration, voiceEnabled, audioEnabled, session, voiceGuidancePlayed, playAudio])
 
     // Reset voice guidance when session restarts
     useEffect(() => {
@@ -127,11 +157,12 @@ export default function MeditationSessionView({
                 <video
                     ref={videoRef}
                     src={session.videoSrc}
-                    autoPlay
                     loop
                     muted={!audioEnabled}
                     playsInline
                     className="meditation-session-video w-full h-full object-cover"
+                    onLoadStart={() => setIsVideoReady(false)}
+                    onCanPlay={() => setIsVideoReady(true)}
                 />
             </div>
         </div>

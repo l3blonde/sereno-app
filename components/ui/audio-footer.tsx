@@ -1,8 +1,8 @@
 /**
  * AudioFooter Component - Session Audio Controls Bar
- * @description Audio control panel with playback controls and session progress visualization
+ * @description Fixed bottom audio control panel with playback controls and session progress visualization
  * @functionality Play/pause, restart, voice toggle, audio toggle, visual progress bar with time display
- * @styling Tailwind: Layout, spacing, buttons, responsive design, inline shadow utilities for progress bar glow
+ * @styling Tailwind: 100% - Layout, spacing, buttons, responsive design, inline shadow utilities for progress bar glow
  * @cssFiles None - Pure Tailwind implementation with inline shadow utilities for glow effects
  * @layout Horizontal layout with left controls, center progress bar, right toggles
  */
@@ -40,60 +40,63 @@ export function AudioFooter({
         return `${mins}:${secs.toString().padStart(2, "0")}`
     }
 
-    // Calculate progress percentage
-    const progressPercent = Math.max(0, Math.min(100, ((totalDuration - timeRemaining) / totalDuration) * 100))
+    // Calculate progress percentage (elapsed time / total time)
+    const elapsedTime = totalDuration - timeRemaining
+    const progressPercent = totalDuration > 0 ? Math.max(0, Math.min(100, (elapsedTime / totalDuration) * 100)) : 0
 
-    // Generate progress bar blocks - increased from 20 to 30 blocks
+    // Generate progress bar blocks
     const generateProgressBar = () => {
-        const totalBlocks = 30
+        const totalBlocks = 20
         const filledBlocks = Math.round((progressPercent / 100) * totalBlocks)
 
         return (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
                 <div className="flex space-x-[1px]">
                     {Array.from({ length: totalBlocks }).map((_, i) => (
                         <div
                             key={i}
-                            className={`w-[5px] h-[18px] rounded-sm ${
-                                i < filledBlocks ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.7)]" : "bg-white/20"
+                            className={`w-[4px] h-[16px] rounded-sm transition-all duration-300 ${
+                                i < filledBlocks
+                                    ? "bg-white shadow-[0_0_8px_rgba(255,255,255,0.8),0_0_4px_rgba(255,255,255,0.6)]"
+                                    : "bg-white/20"
                             }`}
                         />
                     ))}
                 </div>
-                <div className="text-white font-mono text-base min-w-[52px]">{formatTime(timeRemaining)}</div>
+                <div className="text-white font-mono text-sm min-w-[48px] tabular-nums">{formatTime(timeRemaining)}</div>
             </div>
         )
     }
 
     return (
         <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
                 <button
-                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 active:scale-95"
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300 active:scale-95"
                     onClick={onRestartAction}
                     aria-label="Restart"
                 >
-                    <RotateCcw size={20} className="text-white" strokeWidth={1.5} />
+                    <RotateCcw size={18} className="text-white" strokeWidth={1.5} />
                 </button>
 
                 <button
-                    className="w-14 h-14 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all duration-300 active:scale-95"
+                    className="w-12 h-12 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all duration-300 active:scale-95"
                     onClick={onPlayPauseAction}
                     aria-label={isPlaying ? "Pause" : "Play"}
                 >
                     {isPlaying ? (
-                        <Pause size={24} className="text-white" strokeWidth={1.5} />
+                        <Pause size={22} className="text-white" strokeWidth={1.5} />
                     ) : (
-                        <Play size={24} className="text-white ml-1" strokeWidth={1.5} />
+                        <Play size={22} className="text-white ml-1" strokeWidth={1.5} />
                     )}
                 </button>
             </div>
 
-            <div className="flex-1 mx-4 flex justify-center">{generateProgressBar()}</div>
+            <div className="flex-1 mx-2 flex justify-center">{generateProgressBar()}</div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
                 <button
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 ${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 ${
                         voiceEnabled ? "bg-white/20" : "bg-white/10 hover:bg-white/15"
                     }`}
                     onClick={onVoiceToggleAction}
@@ -101,14 +104,14 @@ export function AudioFooter({
                     title={voiceEnabled ? "Voice guidance on" : "Voice guidance off"}
                 >
                     {voiceEnabled ? (
-                        <Mic size={20} className="text-white" strokeWidth={1.5} />
+                        <Mic size={18} className="text-white" strokeWidth={1.5} />
                     ) : (
-                        <MicOff size={20} className="text-white" strokeWidth={1.5} />
+                        <MicOff size={18} className="text-white" strokeWidth={1.5} />
                     )}
                 </button>
 
                 <button
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 ${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 ${
                         audioEnabled ? "bg-white/20" : "bg-white/10 hover:bg-white/15"
                     }`}
                     onClick={onAudioToggleAction}
@@ -116,9 +119,9 @@ export function AudioFooter({
                     title={audioEnabled ? "Background audio on" : "Background audio off"}
                 >
                     {audioEnabled ? (
-                        <Volume2 size={20} className="text-white" strokeWidth={1.5} />
+                        <Volume2 size={18} className="text-white" strokeWidth={1.5} />
                     ) : (
-                        <VolumeX size={20} className="text-white" strokeWidth={1.5} />
+                        <VolumeX size={18} className="text-white" strokeWidth={1.5} />
                     )}
                 </button>
             </div>

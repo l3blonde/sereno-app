@@ -1,7 +1,7 @@
 /**
  * lib/meditation/meditation-data.ts
  * Data module for meditation sessions including metadata,
- * audio/video paths, voice guidance, and utility functions for accessing sessions.
+ * audio/video paths, and utility functions for accessing sessions.
  */
 export interface MeditationSession {
     id: string
@@ -14,7 +14,7 @@ export interface MeditationSession {
     audioSrc: string
     videoSrc: string
     thumbnailSrc: string
-    voiceGuidance: {
+    voiceGuidance?: {
         intro: string
         middle: string
         end: string
@@ -34,9 +34,9 @@ export const meditationSessions: MeditationSession[] = [
         videoSrc: "/videos/forest-background.mp4",
         thumbnailSrc: "/thumbnails/forest-escape.png",
         voiceGuidance: {
-            intro: "/audio/forest-intro.mp3",
-            middle: "/audio/forest-middle.mp3",
-            end: "/audio/forest-end.mp3",
+            intro: "/audio/meditation/forest-intro.mp3",
+            middle: "/audio/meditation/forest-middle.mp3",
+            end: "/audio/meditation/forest-end.mp3",
         },
     },
     {
@@ -52,9 +52,9 @@ export const meditationSessions: MeditationSession[] = [
         videoSrc: "/videos/ocean-background.mp4",
         thumbnailSrc: "/thumbnails/ocean-mindfulness.png",
         voiceGuidance: {
-            intro: "/audio/ocean-intro.mp3",
-            middle: "/audio/ocean-middle.mp3",
-            end: "/audio/ocean-end.mp3",
+            intro: "/audio/meditation/ocean-intro.mp3",
+            middle: "/audio/meditation/ocean-middle.mp3",
+            end: "/audio/meditation/ocean-end.mp3",
         },
     },
     {
@@ -69,9 +69,9 @@ export const meditationSessions: MeditationSession[] = [
         videoSrc: "/videos/porsche-mountain-drive.mp4",
         thumbnailSrc: "/thumbnails/sereno-zen.png",
         voiceGuidance: {
-            intro: "/audio/zen-intro.mp3",
-            middle: "/audio/zen-middle.mp3",
-            end: "/audio/zen-end.mp3",
+            intro: "/audio/meditation/zen-intro.mp3",
+            middle: "/audio/meditation/zen-middle.mp3",
+            end: "/audio/meditation/zen-end.mp3",
         },
     },
     {
@@ -87,21 +87,9 @@ export const meditationSessions: MeditationSession[] = [
         videoSrc: "/videos/charging-chakras.mp4",
         thumbnailSrc: "/thumbnails/charging-chakras.png",
         voiceGuidance: {
-            intro: "/audio/chakras-intro.mp3",
-            middle: "/audio/chakras-middle.mp3",
-            end: "/audio/chakras-end.mp3",
+            intro: "/audio/meditation/chakras-intro.mp3",
+            middle: "/audio/meditation/chakras-middle.mp3",
+            end: "/audio/meditation/chakras-end.mp3",
         },
     },
 ]
-
-export function getAllMeditationSessions(): MeditationSession[] {
-    return meditationSessions
-}
-
-export function getMeditationSessionById(id: string): MeditationSession | undefined {
-    return meditationSessions.find((session) => session.id === id)
-}
-
-export function getMeditationSessionsByTag(tag: string): MeditationSession[] {
-    return meditationSessions.filter((session) => session.tags.includes(tag))
-}

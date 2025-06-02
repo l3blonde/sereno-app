@@ -56,9 +56,12 @@ export function useBreathAnimation(
             return
         }
 
+        // Reset timing reference when starting
         lastTimeRef.current = performance.now()
 
         const animate = (time: number) => {
+            if (!isActive || isPaused) return
+
             const elapsed = time - lastTimeRef.current
             const phaseProgress = Math.min(elapsed / phaseDuration, 1)
 
@@ -72,10 +75,8 @@ export function useBreathAnimation(
             // If this phase is complete, advance to the next phase
             if (phaseProgress >= 1) {
                 advanceToNextPhase()
-                lastTimeRef.current = performance.now()
-            }
-
-            if (isActive && !isPaused) {
+                lastTimeRef.current = time // Reset timing for new phase
+            } else {
                 animationRef.current = requestAnimationFrame(animate)
             }
         }

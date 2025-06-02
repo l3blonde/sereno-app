@@ -1,18 +1,18 @@
 /**
  * components/ui/breathing-timer.tsx
- * Simplified breathing timer component with monochromic design.
- * Provides visual feedback for breathing exercises without text indicators.
+ * Enhanced breathing timer component with phase text display and proper 4-4-4 timing.
  */
+
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface BreathingTimerProps {
     duration: number
     timeRemaining: number
     isPlaying: boolean
     currentPhase: "inhale" | "hold" | "exhale"
-    onPhaseChange: (phase: "inhale" | "hold" | "exhale") => void
+    onPhaseChangeAction: (phase: "inhale" | "hold" | "exhale") => void
     size?: "small" | "medium" | "large"
     themeColor?: string
     isLightTheme?: boolean
@@ -23,18 +23,18 @@ export function BreathingTimer({
                                    timeRemaining,
                                    isPlaying,
                                    currentPhase,
-                                   onPhaseChange,
+                                   onPhaseChangeAction,
                                    size = "medium",
                                    isLightTheme = false,
                                }: BreathingTimerProps) {
     const [phaseProgress, setPhaseProgress] = useState(0)
     const [cycleProgress, setCycleProgress] = useState(0)
-    const lastUpdateTimeRef = useRef<number>(Date.now())
-    const nextPhaseRef = useRef<"inhale" | "hold" | "exhale" | null>(null)
+    const [internalPhase, setInternalPhase] = useState<"inhale" | "hold" | "exhale">(currentPhase)
+    const phaseStartTimeRef = useRef<number>(0)
+    const animationFrameRef = useRef<number>(0)
 
     // Fixed 4-4-4 cycle (each phase is exactly 4 seconds)
-    const phaseDuration = 4 // seconds
-    const totalCycleTime = 12 // seconds (4+4+4)
+    const phaseDuration = 4000 // milliseconds
 
     // Update the size classes
     const getSizeClass = () => {
@@ -49,76 +49,79 @@ export function BreathingTimer({
         }
     }
 
-    const formatTime = (seconds: number) => {
-        const mins = Math.floor(seconds / 60)
-        const secs = Math.floor(seconds % 60)
-        return `${mins}:${secs.toString().padStart(2, "0")}`
-    }
-
     const calculateProgress = () => {
         return (duration - timeRemaining) / duration
     }
 
-    const updatePhaseRef = useCallback((newPhase: "inhale" | "hold" | "exhale") => {
-        nextPhaseRef.current = newPhase
-    }, [])
-
-    // Trigger phase change when nextPhaseRef is updated
+    // Reset phase timing when starting or resuming
     useEffect(() => {
-        if (nextPhaseRef.current) {
-            const newPhase = nextPhaseRef.current
-            setTimeout(() => {
-                onPhaseChange(newPhase)
-            }, 0)
-            nextPhaseRef.current = null
+        if (isPlaying) {
+            phaseStartTimeRef.current = performance.now()
+            setPhaseProgress(0)
+            setInternalPhase(currentPhase)
         }
-    }, [onPhaseChange])
+    }, [isPlaying, currentPhase])
 
-    // Update phase progress and cycle progress
+    // Main animation loop with proper phase transitions
     useEffect(() => {
-        if (!isPlaying) return
+        if (!isPlaying) {
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current)
+            }
+            return
+        }
 
-        const updatePhase = () => {
-            const now = Date.now()
-            const elapsed = (now - lastUpdateTimeRef.current) / 1000
-            lastUpdateTimeRef.current = now
+        const animate = () => {
+            const now = performance.now()
+            const elapsed = now - phaseStartTimeRef.current
+            const progress = Math.min(elapsed / phaseDuration, 1)
 
-            setPhaseProgress((prev) => {
-                let newProgress = prev + elapsed / phaseDuration
-
-                if (newProgress >= 1) {
-                    newProgress = 0
-
-                    // Cycle through phases: inhale -> hold -> exhale -> inhale
-                    switch (currentPhase) {
-                        case "inhale":
-                            updatePhaseRef("hold")
-                            break
-                        case "hold":
-                            updatePhaseRef("exhale")
-                            break
-                        case "exhale":
-                            updatePhaseRef("inhale")
-                            break
-                    }
-                }
-
-                return newProgress
-            })
+            setPhaseProgress(progress)
 
             // Calculate overall cycle progress (0-1 across all phases)
-            const phaseIndex = ["inhale", "hold", "exhale"].indexOf(currentPhase)
-            const phaseFraction = 1 / 3 // Each phase is 1/3 of the cycle
-            setCycleProgress(phaseIndex * phaseFraction + phaseProgress * phaseFraction)
+            const phaseIndex = ["inhale", "hold", "exhale"].indexOf(internalPhase)
+            const phaseFraction = 1 / 3
+            setCycleProgress(phaseIndex * phaseFraction + progress * phaseFraction)
+
+            // Check if phase is complete
+            if (progress >= 1) {
+                // Move to next phase
+                let nextPhase: "inhale" | "hold" | "exhale"
+                switch (internalPhase) {
+                    case "inhale":
+                        nextPhase = "hold"
+                        break
+                    case "hold":
+                        nextPhase = "exhale"
+                        break
+                    case "exhale":
+                        nextPhase = "inhale"
+                        break
+                }
+
+                console.log(`Phase transition: ${internalPhase} -> ${nextPhase}`)
+
+                setInternalPhase(nextPhase)
+                setPhaseProgress(0)
+                phaseStartTimeRef.current = now
+
+                // Trigger parent callback for voice guidance
+                onPhaseChangeAction(nextPhase)
+            }
+
+            if (isPlaying) {
+                animationFrameRef.current = requestAnimationFrame(animate)
+            }
         }
 
-        lastUpdateTimeRef.current = Date.now()
-        const intervalId = setInterval(updatePhase, 50)
+        animationFrameRef.current = requestAnimationFrame(animate)
 
         return () => {
-            clearInterval(intervalId)
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current)
+            }
         }
-    }, [isPlaying, phaseDuration, updatePhaseRef, currentPhase, phaseProgress, onPhaseChange])
+    }, [isPlaying, internalPhase, onPhaseChangeAction, phaseDuration])
 
     const radius = 45
     const circumference = 2 * Math.PI * radius
@@ -129,11 +132,12 @@ export function BreathingTimer({
     const phaseCircumference = 2 * Math.PI * phaseRadius
     const phaseStrokeDashoffset = phaseCircumference * (1 - phaseProgress)
 
+    // Calculate dot position based on cycle progress
     const angle = cycleProgress * 2 * Math.PI - Math.PI / 2
     const dotX = 50 + radius * Math.cos(angle)
     const dotY = 50 + radius * Math.sin(angle)
 
-    // Monochromic colors - grey/white only
+    // Monochromic colors
     const getMonochromeColor = () => {
         return isLightTheme ? "rgba(0, 0, 0, 0.8)" : "rgba(255, 255, 255, 0.8)"
     }
@@ -189,7 +193,7 @@ export function BreathingTimer({
                     }}
                 />
 
-                {/* Phase indicator dot */}
+                {/* Phase indicator dot - moves around the circle every 12 seconds (4+4+4) */}
                 <circle
                     cx={dotX}
                     cy={dotY}
@@ -202,10 +206,10 @@ export function BreathingTimer({
                 />
             </svg>
 
-            {/* Time display only */}
+            {/* Phase text display - shows current phase */}
             <div className="absolute inset-0 flex items-center justify-center z-20">
-                <div className="text-3xl font-mono text-white font-bold tracking-tight drop-shadow-md">
-                    {formatTime(timeRemaining)}
+                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight drop-shadow-md uppercase">
+                    {internalPhase}
                 </div>
             </div>
         </div>

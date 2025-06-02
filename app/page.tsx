@@ -1,41 +1,12 @@
 /**
- * @fileoverview Sereno Wellness App - Main Application Page
- * @description CarPlay-optimised wellness application with mobile landscape-first responsive design
- *
- * @functionality
- * - Breathing exercises: Quick Calm, Deep Focus, Morning Energise, Souffle de Vador
- * - Meditation sessions: Forest Escape, Ocean Mindfulness, Sereno Zen, Charging Chakras
- * - Audio management: Background audio, voice guidance, volume controls
- * - Session management: Timer controls, pause/resume, restart functionality
- * - Theme management: Dark mode default with customisable colour schemes
- * - Settings panel: Duration selection, theme customisation
- *
- * @styling
- * - Tailwind CSS (90%): Layout, spacing, colours, typography, responsive design, transitions
- * - Custom CSS (10%): Complex animations, breathing visuals, custom shapes only
- *
- * @layout
- * - Mobile landscape-first: Optimised for phones in landscape orientation (667x375px)
- * - Minimal gaps: Header 48px, content starts immediately below
- * - Split-view interface: Exercise list + preview (responsive stacking)
- * - Full-screen exercise views: Immersive breathing/meditation experiences
- * - Fixed positioning: Audio controls, back buttons (responsive sizing)
- *
- * @responsiveDesign
- * - Mobile landscape (default): Single column, minimal gaps, touch-optimised
- * - Tablet landscape (md:): Split-view layout, larger controls, more spacing
- * - Desktop/CarPlay (lg:): Full layout with sidebars, generous spacing
- * - All responsive logic handled in this file with Tailwind classes
- *
- * @cssFiles
- * - app/globals.css: Base styles, typography system only
- * - app/styles/components.css: Complex animations only (breathing, custom shapes)
- * - Removed: responsive.css, layout.css (now handled with Tailwind)
+ * Sereno Wellness App - CarPlay-optimised breathing and meditation exercises
+ * Mobile landscape-first design with 4-4-4 breathing patterns and voice guidance
  */
 
 "use client"
-
 import { useState, useEffect, useCallback, useRef } from "react"
+import type React from "react"
+
 import { ThemeProvider, useTheme } from "@/components/theme-provider"
 import type { MeditationSession } from "@/lib/meditation/meditation-data"
 import { ThemeColorProvider } from "@/components/theme-color-provider"
@@ -48,22 +19,22 @@ import { SettingsPanel } from "@/components/ui/settings-panel"
 import { WindIcon } from "@/components/icons/wind-icon"
 import { LotusIcon } from "@/components/icons/lotus-icon"
 import { TimerOverlay } from "@/components/ui/timer-overlay"
-import { BreathingTimer } from "@/components/ui/breathing-timer"
+import { SystemDock } from "@/components/ui/system-dock"
 
 import QuickCalm from "@/components/features/breathing/quick-calm"
 import DeepFocus from "@/components/features/breathing/deep-focus"
 import MorningEnergize from "@/components/features/breathing/morning-energize"
 import SouffleDeVador from "@/components/features/breathing/souffle-de-vador"
 import MeditationSessionView from "@/components/features/meditation/meditation-session"
+import { BreathingTimer } from "@/components/ui/breathing-timer"
 
 const exerciseCategories = {
     breathing: [
         {
             id: "quick-calm",
             title: "Quick Calm",
-            description:
-                "Reduce stress quickly with guided breathing techniques designed for moments when you need immediate relaxation.",
-            category: "breathing",
+            description: "Instant stress relief",
+            category: "breathing" as const,
             tags: ["relax"],
             icon: <WindIcon width={24} height={24} />,
             audioSrc: "/audio/forest-background.mp3",
@@ -71,9 +42,8 @@ const exerciseCategories = {
         {
             id: "deep-focus",
             title: "Deep Focus",
-            description:
-                "Enhance concentration and mental clarity with this breathing pattern optimized for sustained attention.",
-            category: "breathing",
+            description: "Enhanced concentration",
+            category: "breathing" as const,
             tags: ["focus"],
             icon: <WindIcon width={24} height={24} />,
             audioSrc: "/audio/deep-focus.mp3",
@@ -81,9 +51,8 @@ const exerciseCategories = {
         {
             id: "morning-energize",
             title: "Morning Energize",
-            description:
-                "Start your day with this energizing breathing exercise designed to increase alertness and vitality.",
-            category: "breathing",
+            description: "Start day energized",
+            category: "breathing" as const,
             tags: ["vitalize"],
             icon: <WindIcon width={24} height={24} />,
             audioSrc: "/audio/morning-energize.mp3",
@@ -91,9 +60,8 @@ const exerciseCategories = {
         {
             id: "souffle-de-vador",
             title: "Souffle de Vador",
-            description:
-                "Experience deep immersive breathing with this unique pattern inspired by focused breathing techniques.",
-            category: "breathing",
+            description: "Deep immersive breathing",
+            category: "breathing" as const,
             tags: ["focus"],
             icon: <WindIcon width={24} height={24} />,
             audioSrc: "/audio/imperialMarch.mp3",
@@ -103,83 +71,128 @@ const exerciseCategories = {
         {
             id: "forest-escape",
             title: "Forest Escape",
-            description:
-                "Find peace in a virtual forest environment with guided meditation to help you disconnect and relax.",
-            category: "meditation",
-            tags: ["relax"],
+            description: "Virtual forest peace",
+            category: "meditation" as const,
+            tags: ["relax", "nature"],
             icon: <LotusIcon width={24} height={24} />,
             audioSrc: "/audio/forest-background.mp3",
             videoSrc: "/videos/forest-background.mp4",
             thumbnailSrc: "/thumbnails/forest-escape.png",
+            voiceGuidance: {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            },
         },
         {
             id: "ocean-mindfulness",
             title: "Ocean Mindfulness",
-            description:
-                "Let the rhythm of ocean waves guide you to a state of calm and mindfulness with this meditation session.",
-            category: "meditation",
-            tags: ["relax"],
+            description: "Wave rhythm meditation",
+            category: "meditation" as const,
+            tags: ["relax", "nature"],
             icon: <LotusIcon width={24} height={24} />,
             audioSrc: "/audio/ocean-background.mp3",
             videoSrc: "/videos/ocean-background.mp4",
             thumbnailSrc: "/thumbnails/ocean-mindfulness.png",
+            voiceGuidance: {
+                intro: "/audio/ocean-intro.mp3",
+                middle: "/audio/ocean-middle.mp3",
+                end: "/audio/ocean-end.mp3",
+            },
         },
         {
             id: "sereno-zen",
             title: "Sereno Zen",
-            description:
-                "Focus at high speeds with this meditation designed specifically for drivers seeking mental clarity.",
-            category: "meditation",
-            tags: ["focus"],
+            description: "Driving focus clarity",
+            category: "meditation" as const,
+            tags: ["focus", "driving"],
             icon: <LotusIcon width={24} height={24} />,
             audioSrc: "/audio/sereno-mountain-drive.mp3",
             videoSrc: "/videos/porsche-mountain-drive.mp4",
             thumbnailSrc: "/thumbnails/sereno-zen.png",
+            voiceGuidance: {
+                intro: "/audio/zen-intro.mp3",
+                middle: "/audio/zen-middle.mp3",
+                end: "/audio/zen-end.mp3",
+            },
         },
         {
             id: "charging-chakras",
             title: "Charging Chakras",
-            description:
-                "Energize while charging your vehicle with this meditation focused on revitalizing your energy centers.",
-            category: "meditation",
-            tags: ["vitalize"],
+            description: "Energy center alignment",
+            category: "meditation" as const,
+            tags: ["vitalize", "energy"],
             icon: <LotusIcon width={24} height={24} />,
             audioSrc: "/audio/charging-chakras.mp3",
             videoSrc: "/videos/charging-chakras.mp4",
             thumbnailSrc: "/thumbnails/charging-chakras.png",
+            voiceGuidance: {
+                intro: "/audio/chakras-intro.mp3",
+                middle: "/audio/chakras-middle.mp3",
+                end: "/audio/chakras-end.mp3",
+            },
         },
     ],
 }
 
 type AppTheme = "dark" | "light" | "focus" | "relax"
 
-function AppContent() {
-    const { isInitialized, playAudio, setVolume, playBackgroundAudio, stopBackgroundAudio, stopAndPlayAudio } =
-        useAudioContext()
+interface BaseExercise {
+    id: string
+    title: string
+    description: string
+    category: "breathing" | "meditation"
+    tags: string[]
+    icon: React.ReactNode
+    audioSrc: string
+}
 
+interface BreathingExercise extends BaseExercise {
+    category: "breathing"
+}
+
+interface MeditationExercise extends BaseExercise {
+    category: "meditation"
+    videoSrc: string
+    thumbnailSrc: string
+    voiceGuidance?: {
+        intro: string
+        middle: string
+        end: string
+    }
+}
+
+type ExerciseItem = BreathingExercise | MeditationExercise
+
+function AppContent() {
+    const { isInitialized, playBackgroundAudio, stopBackgroundAudio, stopAndPlayAudio, stopAudio } = useAudioContext()
+
+    // State management
     const [activeTab, setActiveTab] = useState<"breathing" | "meditating">("breathing")
-    const [sessionDuration, setSessionDuration] = useState(300) // 5 minutes default
+    const [sessionDuration, setSessionDuration] = useState(120) // 2 minutes default for breathing
     const [appTheme, setAppTheme] = useState<AppTheme>("dark")
-    const [selectedExercise, setSelectedExercise] = useState(exerciseCategories.breathing[0])
+    const [selectedExercise, setSelectedExercise] = useState<ExerciseItem>(exerciseCategories.breathing[0])
     const [showSettings, setShowSettings] = useState(false)
     const [showTimerOverlay, setShowTimerOverlay] = useState(false)
 
-    const [currentView, setCurrentView] = useState("home") // "home", "breathing", "meditation", "settings"
+    const [currentView, setCurrentView] = useState("home")
     const [currentExercise, setCurrentExercise] = useState("")
     const [currentSession, setCurrentSession] = useState<MeditationSession | null>(null)
 
     const [isActive, setIsActive] = useState(false)
     const [isPaused, setIsPaused] = useState(false)
     const [currentPhase, setCurrentPhase] = useState<"inhale" | "hold" | "exhale">("inhale")
-    const [volume, setVolumeState] = useState(80)
+    const [isFirstCycle, setIsFirstCycle] = useState(true)
+    const volume = 80
     const [voiceEnabled, setVoiceEnabled] = useState(true)
     const [audioEnabled, setAudioEnabled] = useState(true)
-    const [timeRemaining, setTimeRemaining] = useState(300)
+    const [timeRemaining, setTimeRemaining] = useState(120)
 
     const { setTheme } = useTheme()
     const isLightTheme = appTheme === "light"
 
     const currentPhaseRef = useRef<"inhale" | "hold" | "exhale">("inhale")
+    const isPlaying = !isPaused
 
     useEffect(() => {
         if (!selectedExercise && exerciseCategories.breathing.length > 0) {
@@ -214,14 +227,16 @@ function AppContent() {
     const handleTimerSelect = (minutes: number) => {
         setSessionDuration(minutes * 60)
         setTimeRemaining(minutes * 60)
-        setShowTimerOverlay(false) // Close overlay after selection
+        setShowTimerOverlay(false)
     }
 
     useEffect(() => {
         const savedTheme = localStorage.getItem("appTheme") as AppTheme | null
+        const theme = savedTheme || "dark"
+
         if (savedTheme) {
             setAppTheme(savedTheme)
-            document.documentElement.setAttribute("data-theme", savedTheme)
+            document.documentElement.setAttribute("data-theme", theme)
 
             const themeProviderMap: Record<AppTheme, "focus" | "vitalize" | "zen"> = {
                 dark: "focus",
@@ -231,7 +246,7 @@ function AppContent() {
             }
 
             if (themeProviderMap[savedTheme]) {
-                setTheme(themeProviderMap[savedTheme])
+                setTheme(themeProviderMap[theme as AppTheme])
             } else {
                 setTheme("focus")
                 document.documentElement.setAttribute("data-theme", "dark")
@@ -242,24 +257,70 @@ function AppContent() {
         }
     }, [setTheme])
 
+    // Session timer effect - add this after the existing useEffects
+    useEffect(() => {
+        let interval: NodeJS.Timeout | null = null
+
+        if (isActive && !isPaused && timeRemaining > 0) {
+            interval = setInterval(() => {
+                setTimeRemaining((prevTime) => {
+                    if (prevTime <= 1) {
+                        // Session completed
+                        setIsActive(false)
+                        setIsPaused(false)
+                        stopBackgroundAudio()
+                        stopAudio() // Stop voice guidance when session completes
+                        return 0
+                    }
+                    return prevTime - 1
+                })
+            }, 1000)
+        }
+
+        return () => {
+            if (interval) {
+                clearInterval(interval)
+            }
+        }
+    }, [isActive, isPaused, timeRemaining, stopBackgroundAudio, stopAudio])
+
     const handlePhaseChange = useCallback(
         (phase: "inhale" | "hold" | "exhale") => {
+            console.log(`Phase change triggered: ${currentPhaseRef.current} -> ${phase}`)
             currentPhaseRef.current = phase
 
             setTimeout(() => {
                 setCurrentPhase(phase)
 
                 if (voiceEnabled && audioEnabled && isInitialized) {
-                    const audioFile =
-                        phase === "inhale" ? "/audio/inhale.mp3" : phase === "hold" ? "/audio/hold.mp3" : "/audio/exhale.mp3"
+                    let audioFile: string
 
-                    stopAndPlayAudio(audioFile, false, 1.0).catch(() => {
+                    // Use detailed instructions for first cycle, then simple cues
+                    if (isFirstCycle) {
+                        switch (phase) {
+                            case "inhale":
+                                audioFile = "/audio/inhale-start.mp3"
+                                break
+                            case "hold":
+                                audioFile = "/audio/hold-start.mp3"
+                                break
+                            case "exhale":
+                                audioFile = "/audio/exhale-start.mp3"
+                                setIsFirstCycle(false)
+                                break
+                        }
+                    } else {
+                        audioFile = `/audio/${phase}.mp3`
+                    }
+
+                    console.log(`Playing voice guidance: ${audioFile}`)
+                    stopAndPlayAudio(audioFile, false, 0.8).catch(() => {
                         console.warn(`Could not play ${phase} audio, continuing without guidance`)
                     })
                 }
             }, 0)
         },
-        [voiceEnabled, audioEnabled, isInitialized, stopAndPlayAudio],
+        [voiceEnabled, audioEnabled, isInitialized, stopAndPlayAudio, isFirstCycle],
     )
 
     const getExerciseBackgroundAudio = (exerciseId: string): string => {
@@ -267,25 +328,81 @@ function AppContent() {
         return exercise?.audioSrc || "/audio/forest-background.mp3"
     }
 
-    const startBreathingExercise = (exercise: any) => {
+    // Get meditation voice guidance based on exercise ID
+    const getMeditationVoiceGuidance = (exerciseId: string) => {
+        const voiceGuidanceMap: Record<string, { intro: string; middle: string; end: string }> = {
+            "forest-escape": {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            },
+            "ocean-mindfulness": {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            },
+            "sereno-zen": {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            },
+            "charging-chakras": {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            },
+        }
+
+        return (
+            voiceGuidanceMap[exerciseId] || {
+                intro: "/audio/forest-intro.mp3",
+                middle: "/audio/forest-middle.mp3",
+                end: "/audio/forest-end.mp3",
+            }
+        )
+    }
+
+    const startBreathingExercise = (exercise: ExerciseItem) => {
         console.log(`Starting breathing exercise: ${exercise.id}`)
         setCurrentExercise(exercise.id)
         setCurrentView("breathing")
         setIsActive(true)
         setIsPaused(false)
         setCurrentPhase("inhale")
+        setIsFirstCycle(true)
         setTimeRemaining(sessionDuration)
 
         if (audioEnabled && isInitialized && exercise.audioSrc) {
-            playBackgroundAudio(exercise.audioSrc, true, 0.5).catch(() => {
+            playBackgroundAudio(exercise.audioSrc, true, 0.3).catch(() => {
                 console.warn(`Could not play background audio for ${exercise.id}, continuing without audio`)
             })
         }
     }
 
-    const startMeditationSession = (exercise: any) => {
+    const startMeditationSession = (exercise: ExerciseItem) => {
         console.log(`Starting meditation session: ${exercise.id}`)
-        setCurrentSession(exercise as MeditationSession)
+
+        // Type guard to check if exercise is a meditation exercise
+        const isMeditationExercise = (ex: ExerciseItem): ex is (typeof exerciseCategories.meditation)[0] => {
+            return ex.category === "meditation"
+        }
+
+        // Convert to MeditationSession format with proper voice guidance
+        const meditationSession = {
+            id: exercise.id,
+            title: exercise.title,
+            description: exercise.description,
+            category: exercise.category,
+            tags: exercise.tags,
+            audioSrc: exercise.audioSrc,
+            videoSrc: isMeditationExercise(exercise) ? exercise.videoSrc : "",
+            thumbnailSrc: isMeditationExercise(exercise) ? exercise.thumbnailSrc : "",
+            instructor: "Sereno Guide",
+            duration: sessionDuration,
+            voiceGuidance: getMeditationVoiceGuidance(exercise.id),
+        } satisfies MeditationSession
+
+        setCurrentSession(meditationSession)
         setCurrentView("meditation")
         setTimeRemaining(sessionDuration)
         setIsActive(true)
@@ -303,7 +420,10 @@ function AppContent() {
         setCurrentExercise("")
         setCurrentSession(null)
         setIsActive(false)
+        setIsFirstCycle(true)
+        // Stop ALL audio when returning to home
         stopBackgroundAudio()
+        stopAudio() // This stops voice guidance audio
     }
 
     const handlePlayPause = () => {
@@ -314,7 +434,7 @@ function AppContent() {
                 if (currentView === "breathing") {
                     const backgroundAudio = getExerciseBackgroundAudio(currentExercise)
                     if (backgroundAudio) {
-                        playBackgroundAudio(backgroundAudio, true, 0.5).catch(() => {
+                        playBackgroundAudio(backgroundAudio, true, 0.3).catch(() => {
                             console.warn(`Could not resume background audio, continuing without audio`)
                         })
                     }
@@ -326,20 +446,25 @@ function AppContent() {
             }
         } else {
             stopBackgroundAudio()
+            stopAudio() // Also stop voice guidance when pausing
         }
     }
 
     const handleRestart = () => {
         setCurrentPhase("inhale")
         setIsPaused(false)
+        setIsFirstCycle(true)
         setTimeRemaining(sessionDuration)
 
+        // Stop all audio before restarting
         stopBackgroundAudio()
+        stopAudio()
+
         if (audioEnabled && isInitialized) {
             if (currentView === "breathing") {
                 const backgroundAudio = getExerciseBackgroundAudio(currentExercise)
                 if (backgroundAudio) {
-                    playBackgroundAudio(backgroundAudio, true, 0.5).catch(() => {
+                    playBackgroundAudio(backgroundAudio, true, 0.3).catch(() => {
                         console.warn(`Could not restart background audio, continuing without audio`)
                     })
                 }
@@ -351,107 +476,46 @@ function AppContent() {
         }
     }
 
-    const handleVolumeChange = (newVolume: number) => {
-        setVolumeState(newVolume)
-        setVolume(newVolume / 100)
+    const handleSelectExercise = (exercise: ExerciseItem) => {
+        setSelectedExercise(exercise)
+    }
+
+    const handleStartExercise = (exercise: ExerciseItem) => {
+        if (exercise.category === "breathing") {
+            startBreathingExercise(exercise)
+        } else if (exercise.category === "meditation") {
+            startMeditationSession(exercise)
+        }
     }
 
     const handleAudioToggle = () => {
         setAudioEnabled(!audioEnabled)
-        if (audioEnabled) {
-            stopBackgroundAudio()
-        } else if (isInitialized) {
-            if (currentView === "breathing") {
-                const backgroundAudio = getExerciseBackgroundAudio(currentExercise)
-                if (backgroundAudio) {
-                    playBackgroundAudio(backgroundAudio, true, 0.5).catch(() => {
-                        console.warn(`Could not play background audio, continuing without audio`)
-                    })
-                }
-            } else if (currentView === "meditation" && currentSession) {
-                playBackgroundAudio(currentSession.audioSrc, true, 0.5).catch(() => {
-                    console.warn("Could not play meditation audio, continuing without audio")
-                })
-            }
-        }
     }
 
-    useEffect(() => {
-        if (isActive && !isPaused) {
-            const timer = setInterval(() => {
-                setTimeRemaining((prev) => {
-                    if (prev <= 1) {
-                        setIsPaused(true)
-                        clearInterval(timer)
-
-                        if (voiceEnabled && audioEnabled && isInitialized) {
-                            playAudio("/audio/complete.mp3", false, 1.0).catch(() => {
-                                console.warn("Could not play completion audio")
-                            })
-                        }
-
-                        return 0
-                    }
-                    return prev - 1
-                })
-            }, 1000)
-
-            return () => clearInterval(timer)
-        }
-    }, [isActive, isPaused, voiceEnabled, audioEnabled, isInitialized, playAudio])
-
-    const handleSelectExercise = (exercise: any) => {
-        console.log(`Selected exercise: ${exercise.id}`)
-        setSelectedExercise(exercise)
-    }
-
-    const handleStartExercise = (exercise: any) => {
-        try {
-            console.log(`Handle start exercise called with: ${exercise?.id}`)
-            if (!exercise) {
-                console.error("Exercise is null or undefined")
-                return
-            }
-
-            if (exercise.category === "breathing") {
-                startBreathingExercise(exercise)
-            } else {
-                startMeditationSession(exercise)
-            }
-        } catch (error) {
-            console.error("Error starting exercise:", error)
-        }
-    }
-
-    const renderBreathingPreviewAction = (exercise: any) => {
+    // Render functions
+    const renderBreathingPreviewAction = (exercise: ExerciseItem | null) => {
         if (!exercise) return null
 
         switch (exercise.id) {
             case "quick-calm":
-                return <QuickCalm isActive={false} isPaused={true} currentPhase="inhale" isLightTheme={isLightTheme} />
+                return <QuickCalm isActive={false} isPaused={true} currentPhase={currentPhase} isLightTheme={isLightTheme} />
             case "deep-focus":
                 return <DeepFocus isPaused={true} />
             case "morning-energize":
-                return <MorningEnergize isActive={false} isPaused={true} currentPhase="inhale" isLightTheme={isLightTheme} />
+                return (
+                    <MorningEnergize isActive={false} isPaused={true} currentPhase={currentPhase} isLightTheme={isLightTheme} />
+                )
             case "souffle-de-vador":
-                return <SouffleDeVador isActive={false} isPaused={true} currentPhase="inhale" isLightTheme={isLightTheme} />
+                return (
+                    <SouffleDeVador isActive={false} isPaused={true} currentPhase={currentPhase} isLightTheme={isLightTheme} />
+                )
             default:
                 return null
         }
     }
 
-    // Mobile landscape-first header - Minimal height, no gaps
     const renderHeaderMenu = () => (
-        <header
-            className="
-    fixed top-0 left-20 right-16 lg:left-24 lg:right-18
-    h-12 md:h-16 lg:h-20
-    bg-black/95 backdrop-blur-sm
-    border-b border-white/10
-    z-40
-    flex items-center
-  "
-        >
+        <header className="fixed top-0 left-20 right-16 lg:left-24 lg:right-18 h-12 md:h-16 lg:h-20 bg-black/95 backdrop-blur-sm border-b border-white/10 z-40 flex items-center">
             <HeaderMenu
                 activeTab={activeTab}
                 onTabChange={(tab) => {
@@ -470,31 +534,11 @@ function AppContent() {
         </header>
     )
 
-    // Mobile landscape-first audio footer - Compact design
     const renderAudioFooter = () => (
-        <div
-            className="
-      fixed bottom-1 left-1 right-1
-      md:bottom-3 md:left-4 md:right-4
-      lg:bottom-4 lg:left-16 lg:right-16
-      z-50
-    "
-        >
-            <div
-                className="
-        w-full
-        px-2 py-1.5
-        md:px-4 md:py-2.5
-        lg:px-6 lg:py-3
-        rounded-lg
-        md:rounded-xl
-        lg:rounded-2xl
-        bg-black/80 backdrop-blur-md
-        border border-white/20 shadow-lg
-      "
-            >
+        <div className="fixed bottom-1 left-22 right-20 md:bottom-3 md:left-24 md:right-22 lg:bottom-4 lg:left-28 lg:right-24 z-50">
+            <div className="w-full px-2 py-1.5 md:px-4 md:py-2.5 lg:px-6 lg:py-3 rounded-lg md:rounded-xl lg:rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 shadow-lg">
                 <AudioFooter
-                    isPlaying={!isPaused}
+                    isPlaying={isPlaying}
                     onPlayPauseAction={handlePlayPause}
                     onRestartAction={handleRestart}
                     timeRemaining={timeRemaining}
@@ -514,15 +558,12 @@ function AppContent() {
 
         return (
             <div className="fixed inset-0 bg-black overflow-hidden z-45">
-                {/* Back button only - Mobile landscape optimised */}
-                <div
-                    className="
-        fixed top-2 left-2
-        md:top-4 md:left-4
-        lg:top-6 lg:left-6
-        z-50
-      "
-                >
+                {/* System Dock - Keep visible in breathing view */}
+                <div className="fixed left-0 top-0 bottom-0 w-20 lg:w-24 z-50">
+                    <SystemDock />
+                </div>
+
+                <div className="fixed top-2 left-24 md:top-4 md:left-28 lg:top-6 lg:left-30 z-50">
                     <BackButton onBack={returnToHome} exerciseTitle={exerciseTitle} />
                 </div>
 
@@ -562,20 +603,13 @@ function AppContent() {
                     )}
                 </div>
 
-                {/* Breathing timer - Mobile landscape optimised */}
-                <div
-                    className="
-        fixed inset-0 flex items-center justify-center z-20
-        pointer-events-none
-        p-2 md:p-6 lg:p-8
-      "
-                >
+                <div className="fixed inset-0 flex items-center justify-center z-20 pointer-events-none p-2 md:p-6 lg:p-8">
                     <BreathingTimer
                         duration={sessionDuration}
                         timeRemaining={timeRemaining}
-                        isPlaying={!isPaused}
+                        isPlaying={isPlaying}
                         currentPhase={currentPhase}
-                        onPhaseChange={handlePhaseChange}
+                        onPhaseChangeAction={handlePhaseChange}
                         size="large"
                         isLightTheme={isLightTheme}
                     />
@@ -591,32 +625,22 @@ function AppContent() {
 
         return (
             <div className="fixed inset-0 bg-black overflow-hidden z-45">
-                {/* Back button - Mobile landscape optimised */}
-                <div
-                    className="
-          fixed top-2 left-2
-          md:top-4 md:left-4
-          lg:top-6 lg:left-6
-          z-50
-        "
-                >
+                {/* System Dock - Keep visible in meditation view */}
+                <div className="fixed left-0 top-0 bottom-0 w-20 lg:w-24 z-50">
+                    <SystemDock />
+                </div>
+
+                <div className="fixed top-2 left-24 md:top-4 md:left-28 lg:top-6 lg:left-30 z-50">
                     <BackButton onBack={returnToHome} exerciseTitle={currentSession.title} />
                 </div>
 
                 <div className="absolute inset-0">
                     <MeditationSessionView
                         session={currentSession}
-                        onExitAction={returnToHome}
-                        isLightTheme={isLightTheme}
                         volume={volume}
-                        isPlaying={!isPaused}
-                        onPlayPauseAction={handlePlayPause}
-                        onRestartAction={handleRestart}
-                        onVolumeChangeAction={handleVolumeChange}
+                        isPlaying={isPlaying}
                         voiceEnabled={voiceEnabled}
-                        onVoiceToggleAction={() => setVoiceEnabled(!voiceEnabled)}
                         audioEnabled={audioEnabled}
-                        onAudioToggleAction={handleAudioToggle}
                         timeRemaining={timeRemaining}
                         totalDuration={sessionDuration}
                     />
@@ -652,7 +676,9 @@ function AppContent() {
                         {renderHeaderMenu()}
                         <main className="w-full h-[calc(100vh-3rem)] md:h-[calc(100vh-4rem)] lg:h-[calc(100vh-5rem)] pt-12 md:pt-16 lg:pt-20 overflow-hidden">
                             <SplitView
-                                exercises={activeTab === "breathing" ? exerciseCategories.breathing : exerciseCategories.meditation}
+                                exercises={
+                                    activeTab === "breathing" ? [...exerciseCategories.breathing] : [...exerciseCategories.meditation]
+                                }
                                 selectedExercise={selectedExercise}
                                 onSelectExerciseAction={handleSelectExercise}
                                 onStartExerciseAction={handleStartExercise}
@@ -670,7 +696,6 @@ function AppContent() {
         }
     }
 
-    // Add the TimerOverlay rendering separately
     const renderTimerOverlay = () => {
         if (showTimerOverlay) {
             return (
