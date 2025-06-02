@@ -337,19 +337,19 @@ function AppContent() {
                 end: "/audio/forest-end.mp3",
             },
             "ocean-mindfulness": {
-                intro: "/audio/forest-intro.mp3",
-                middle: "/audio/forest-middle.mp3",
-                end: "/audio/forest-end.mp3",
+                intro: "/audio/ocean-intro.mp3",
+                middle: "/audio/ocean-middle.mp3",
+                end: "/audio/ocean-end.mp3",
             },
             "sereno-zen": {
-                intro: "/audio/forest-intro.mp3",
-                middle: "/audio/forest-middle.mp3",
-                end: "/audio/forest-end.mp3",
+                intro: "/audio/zen-intro.mp3",
+                middle: "/audio/zen-middle.mp3",
+                end: "/audio/zen-end.mp3",
             },
             "charging-chakras": {
-                intro: "/audio/forest-intro.mp3",
-                middle: "/audio/forest-middle.mp3",
-                end: "/audio/forest-end.mp3",
+                intro: "/audio/chakras-intro.mp3",
+                middle: "/audio/chakras-middle.mp3",
+                end: "/audio/chakras-end.mp3",
             },
         }
 
