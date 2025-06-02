@@ -206,7 +206,7 @@ This project demonstrates mastery of:
 ## 📄 License
 
 MIT License - Educational project for Digital Product 4 coursework  
-University of Hertfordshire, 2025
+Thomas More Mechelen, 2025
 
 ---
 
